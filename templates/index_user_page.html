@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Головна - Knowledge Checkup</title>
+    </head>
+    <body>
+        <h1>Головна сторінка (для авторизованого користувача)</h1>
+        <p>Дії:</p>
+        <p><a href="account">Мій профіль</a></p>
+        <p><a href="profile_settings">Налаштування профілю</a></p>
+        <p><a href="/handleLogout">Вихід</a></p>
+        <p><a href="testlist">Перейти до тестів</a></p>
+        <h1>Вітаємо, {{ .Last_name }} {{ .First_name }} {{ .Middle_name }}! (a.k.a. {{ .Nickname }}!)</h1>
+
+        <h2>*Тут буде лого*</h2>
+
+        <p><a href="about">Про нас</a></p>
+        <p><a href="help">Допомога</a></p>
+        <p>Knowledge Checkup(c) 2023</p>
+    </body>
+</html>

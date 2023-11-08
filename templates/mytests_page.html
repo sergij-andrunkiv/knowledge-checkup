@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Мої тести - Knowledge Checkup</title>
+</head>
+<body>
+    <h1>Мої тести (тільки для вчителя)</h1>
+    <header>
+        <p>Дії:</p>
+        <p><a href="mytests">Мої тести</a></p>
+        <p><a href="account">Мій профіль</a></p>
+        <p><a href="profile_settings">Налаштування профілю</a></p>
+        <p><a href="/handleLogout">Вихід</a></p>
+        <p><a href="testlist">Перейти до тестів</a></p>
+        <p>Лого</p>
+    </header>
+    <section>
+        <h2>Кабінет керування створеними тестами</h2>
+        <form action="">
+            <label for="createdTestFilter">Фільтр створених тестів</label>
+            <input type="text" id="createdTestFilter" name="createdTestFilter">
+            <input type="radio" id="title" name="filter_option" value="title">
+            <label for="title">Назва</label>
+            <input type="radio" id="id" name="filter_option" value="id">
+            <label for="id">ID</label><br>
+            <input type="submit" value="Знайти">
+        </form>
+        <h2>Попередній перегляд останніх створених тестів</h2>
+        <form action="">
+            <label for="sort_options">Сортувати за:</label>
+            <select id="sort_options" name="sort_options">
+                <option value="title">Назвою</option>
+                <option value="create_date">Датою створення</option>
+                <option value="modification_date">Датою модифікації</option>
+            </select>
+        </form>
+
+        <div>
+        </div>
+
+        <script>
+            window.onload = function() {
+                let xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            let response = JSON.parse(xhr.responseText);
+
+                            let divGroupCounter = 1;
+                            response.forEach(function(array) {
+                                let testInfoContainer = document.createElement('div');
+                                let constructorButton = document.createElement('button');
+                                testInfoContainer.id = "test-container-" + divGroupCounter;
+                                testInfoContainer.style.border = "1px solid black";
+                                let divCounter = 1;
+                                let id_test, id_creator;
+                                for (let key in array) {
+                                    if (divCounter === 6) {
+                                        id_creator = array[key];
+                                        continue; // пропуск поля власника тесту, оскільки список і так для власника
+                                    }
+                                    let newDiv = document.createElement('div');
+                                    newDiv.id = key + divGroupCounter;
+                                    switch (divCounter) {
+                                        case 1: newDiv.innerHTML = "ID тесту: " + array[key]; id_test = array[key]; constructorButton.dataset['testId'] = array[key]; break;
+                                        case 2: newDiv.innerHTML = "Назва тесту: " + array[key]; break;
+                                        case 3: newDiv.innerHTML = "Кількість запитань: " + array[key]; break;
+                                        case 4: newDiv.innerHTML = "Максимальна оцінка: " + array[key]; break;
+                                        case 5: newDiv.innerHTML = "Теги: " + array[key]; break;
+                                    }
+                                    testInfoContainer.appendChild(newDiv);
+                                    divCounter++;
+                                }
+                                // let previewButton = document.createElement('button');
+                                // let statisticsButton = document.createElement('a');
+                                constructorButton.textContent = "Перейти в конструктор";
+                                constructorButton.id = "constructor-button-" + divGroupCounter;
+
+                                // обробник при натисканні для відправки id тесту і його власника на сервер для подальшого відображення
+                                constructorButton.onclick = function(event) {
+                                    // Відправка питань і варіантів відповідей на сервер за допомогою AJAX
+                                    fetch('/existingtestconstructor', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({ id_test, id_creator })
+                                    })
+                                        .then(response => {
+                                            // Обробка відповіді від сервера
+                                            if (response.ok) {
+                                                window.location.href = '/existingtestconstructor';
+                                            } else {
+                                                console.log('Помилка під час відправки даних');
+                                            }
+                                        })
+                                        .catch(error => {
+                                            // Обробка помилок під час відправки
+                                        });
+                                };
+                                testInfoContainer.appendChild(constructorButton);
+                                document.body.appendChild(testInfoContainer);
+                                divGroupCounter++;
+                            });
+                        }
+                    }
+                };
+                xhr.open("GET", "/sendTestsInformationToClient");
+                xhr.send();
+            };
+        </script>
+    </section>
+</body>
+</html>

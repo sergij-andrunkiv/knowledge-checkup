@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Реєстрація - Knowledge Checkup</title>
+</head>
+<body>
+    <h1>Реєстрація</h1>
+    <form action="/handleRegistration" method="post">
+        <label for="last_name">Прізвище:</label>
+        <input type="text" id="last_name" name="last_name" required><br><br>
+        <label for="first_name">Ім'я:</label>
+        <input type="text" id="first_name" name="first_name" required><br><br>
+        <label for="middle_name">По-батькові:</label>
+        <input type="text" id="middle_name" name="middle_name" required><br><br>
+        <label for="year_of_birth">Рік народження:</label>
+        <input type="text" id="year_of_birth" name="year_of_birth" required><br><br>
+        <label for="nickname">Nickname:</label>
+        <input type="text" id="nickname" name="nickname" required><br><br>
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" required><br><br>
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        <label for="repeat_password">Повторити пароль:</label>
+        <input type="password" id="repeat_password" name="repeat_password" required><br><br>
+        <input type="checkbox" name="approved" id="approved" value="1">
+        <label for="approved">Я погоджуюсь з умовами.</label><br><br>
+        <button id="registerButton" disabled>Зареєструватися</button>
+    </form>
+    <p><a href="/">Повернутися на головну</a></p>
+
+    <script>
+        document.getElementById('approved').addEventListener('change', function() {
+            const registerButton = document.getElementById('registerButton');
+            registerButton.disabled = !this.checked;
+        });
+    </script>
+
+</body>
+</html>
