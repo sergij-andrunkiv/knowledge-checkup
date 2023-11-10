@@ -36,11 +36,36 @@ type Test struct {
 	Creator int `json:"creator"`
 }
 
+type FullTest struct {
+	Id_t int `json:"id_t"`
+	Title string `json:"title"`
+	Count_of_questions int `json:"count_of_questions"`
+	Max_mark int `json:"max_mark"`
+	Tags string `json:"tags"`
+	Creator int `json:"creator"`
+	Questions []Question `json:"questions"`
+}
+
+type Question struct {
+	Id_q int `json:"id_q"`
+	Text string `json:"text"`
+	Id_creator int `json:"id_creator"`
+	Type string `json:"type"`
+	Answers []Answer `json:"answers"`
+}
+
+type Answer struct {
+	Id_a int `json:"id_a"`
+	Id_q int `json:"id_q"`
+	Text string `json:"text"`
+	Is_correct int `json:"is_correct"`
+}
+
 // Створення об'єкту сховища сесій для зберігання сесій у формі куків на стороні клієнта
 var store = sessions.NewCookieStore([]byte(":a#uX}h1.W91r~w:4YGU6B?`T4~>:>"))
 // Глобальна змінна для зберігання підключення до бази даних
 var db *sql.DB
-
+var fullTest FullTest // глобаьлний екземпляр структури FullTest
 
 
 // Функція для обробки та відображення головної сторінки
@@ -531,24 +556,27 @@ func sendTestsInformationToClient(w http.ResponseWriter, r *http.Request) {
 
 
 func existingtestconstructor(w http.ResponseWriter, r *http.Request) {
+	// відображаємо сторінку конструктора існуючого тесту
 	t, err := template.ParseFiles("templates/existingtestconstructor_page.html")
 	if err != nil {
 		fmt.Fprintf(w, err.Error())
 	}
-	t.Execute(w, nil)
+	t.Execute(w, map[string]interface{}{"Test": fullTest})
 
+	// локальна структура для зберігання отриманих id тесту та власника від клієнта
 	type TestIdAndCreator struct {
 		TestId int `json:"id_test"`
 		TestCreator  int    `json:"id_creator"`
 	}
 
+	// якщо від клієнта метод POST
 	if r.Method == "POST" {
+		// читаємо отримані дані, створюємо екземпляр структури та зберігаємо в неї отримані від клієнта дані (id тесту та власника)
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
-			http.Error(w, "Неможливо прочитати тіло запиту", http.StatusBadRequest)
+			//http.Error(w, "Неможливо прочитати тіло запиту", http.StatusBadRequest)
 			return
 		}
-
 		var testIdAndCreator TestIdAndCreator
 		err = json.Unmarshal(body, &testIdAndCreator)
 		if err != nil {
@@ -556,15 +584,124 @@ func existingtestconstructor(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// тимчасово виводимо отримані дані
 		fmt.Println("Дані отримані на сервері:")
 		fmt.Println(testIdAndCreator.TestId) // Виведення отриманих даних у консоль
 		fmt.Println(testIdAndCreator.TestCreator)
 
 		// Тут ви можете обробити дані, що отримані з клієнта
+		// Тепер отримуємо дані про тест із бази даних і виводимо їх на екран для початку
+
+		// Отримання підключення до бази даних
+		db, err := getDBConnection()
+		if err != nil {
+			panic(err.Error())
+		}
+		defer db.Close()
+
+
+		// переініціалізація екземпляру структури FullTest і зберігання в неї результату запиту в БД (запитаний тест)
+		fullTest = FullTest{}
+		err = db.QueryRow("SELECT id_t, title, count_of_questions, max_mark, tags, creator FROM tests WHERE id_t = ? AND creator = ?", testIdAndCreator.TestId, testIdAndCreator.TestCreator).Scan(&fullTest.Id_t, &fullTest.Title, &fullTest.Count_of_questions, &fullTest.Max_mark, &fullTest.Tags, &fullTest.Creator)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("ID вибраного тесту", fullTest.Id_t)
+		fmt.Println("Назва вибраного тесту", fullTest.Title)
+		fmt.Println("Кількість питань вибраного тесту", fullTest.Count_of_questions)
+		fmt.Println("Максимальна оцінка вибраного тесту", fullTest.Max_mark)
+		fmt.Println("Теги вибраного тесту", fullTest.Tags)
+		fmt.Println("Власник вибраного тесту", fullTest.Creator)
+
+		idQuestionsRows, err := db.Query("SELECT id_q FROM tests_structure WHERE id_t = ?", fullTest.Id_t)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer idQuestionsRows.Close()
+		var questionCounter = 0
+		var countOfQuestions = fullTest.Count_of_questions // змінна для заглушки
+		for idQuestionsRows.Next() {
+			// заглушка для одноразового проходження по поточному питанню
+			if(countOfQuestions < fullTest.Count_of_questions) {
+				if(countOfQuestions == 0) {
+					countOfQuestions = fullTest.Count_of_questions
+				} else {
+					countOfQuestions--
+					continue
+				}
+			}
+			var idQuestion int
+			if err := idQuestionsRows.Scan(&idQuestion); err != nil {
+				log.Fatal(err)
+			}
+			question := Question{}
+			err = db.QueryRow("SELECT id_q, text, id_creator, type FROM questions WHERE id_q = ?", idQuestion).Scan(&question.Id_q, &question.Text, &question.Id_creator, &question.Type)
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println("\tID питання: ", question.Id_q)
+			fmt.Println("\tТекст: ", question.Text)
+			fmt.Println("\tID креатора: ", question.Id_creator)
+			fmt.Println("\tТип питання: ", question.Type)
+			// Додати питання до зрізу питань у FullTest
+			if questionCounter < len(fullTest.Questions) {
+				fullTest.Questions[questionCounter] = question
+			} else {
+				// Якщо зріз не достатньо великий, використовуйте append
+				fullTest.Questions = append(fullTest.Questions, question)
+			}
+
+			idAnswersRows, err := db.Query("SELECT id_a FROM tests_structure WHERE id_q = ?", question.Id_q)
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer idAnswersRows.Close()
+			var answerCounter = 0
+			for idAnswersRows.Next() {
+				var idAnswer int
+				if err := idAnswersRows.Scan(&idAnswer); err != nil {
+					log.Fatal(err)
+				}
+				answer := Answer{}
+				err = db.QueryRow("SELECT id_a, id_q, text, is_correct FROM answers WHERE id_a = ?", idAnswer).Scan(&answer.Id_a, &answer.Id_q, &answer.Text, &answer.Is_correct)
+				if err != nil {
+					log.Fatal(err)
+				}
+				fmt.Println("\t\tID варіанту відповіді: ", answer.Id_a)
+				fmt.Println("\t\tID питання, до якого належить відповідь: ", answer.Id_q)
+				fmt.Println("\t\tТекст варіанту відповіді: ", answer.Text)
+				fmt.Println("\t\tПравильна відповідь: ", answer.Is_correct)
+				// Додати варіант відповіді до зрізу варіантів відповідей у FullTest
+				if answerCounter < len(fullTest.Questions[questionCounter].Answers) {
+					fullTest.Questions[questionCounter].Answers[answerCounter] = answer
+				} else {
+					// Якщо зріз не достатньо великий, використовуйте append
+					fullTest.Questions[questionCounter].Answers = append(fullTest.Questions[questionCounter].Answers, answer)
+				}
+				answerCounter++
+			}
+			countOfQuestions--
+			questionCounter++
+		}
+		if err = idQuestionsRows.Err(); err != nil {
+			log.Fatal(err)
+		}
+
+		// Відправка структури FullTest на клієнт у вигляді JSON
+		fullTestJSON, err := json.Marshal(fullTest)
+		if err != nil {
+			http.Error(w, "Помилка кодування JSON", http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(fullTestJSON)
+		return
 
 
 	}
 }
+
 
 
 

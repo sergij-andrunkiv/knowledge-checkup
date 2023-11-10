@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 08, 2023 at 03:48 PM
+-- Generation Time: Nov 10, 2023 at 10:06 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -138,7 +138,26 @@ INSERT INTO `answers` (`id_a`, `id_q`, `text`, `is_correct`) VALUES
 (64, 117, '7', 1),
 (65, 117, '8', 0),
 (66, 117, '9', 0),
-(67, 117, '0', 1);
+(67, 117, '0', 1),
+(68, 118, '1', 0),
+(69, 118, '3', 1),
+(70, 119, 'ddd', 0),
+(71, 119, 'dd', 1),
+(72, 119, 'd', 0),
+(73, 120, '1', 1),
+(74, 120, '2', 0),
+(75, 121, '1', 0),
+(76, 121, '2', 1),
+(77, 121, '3', 0),
+(78, 123, 'Ans1-q1', 0),
+(79, 123, 'Ans2-q1', 0),
+(80, 123, 'Ans3-q1', 1),
+(81, 124, 'Ans1-q2', 0),
+(82, 124, 'Ans2-q2', 1),
+(83, 125, 'Ans1-q3', 1),
+(84, 125, 'Ans2-q3', 0),
+(85, 125, 'Ans3-q3', 1),
+(86, 125, 'Ans4-q3', 0);
 
 -- --------------------------------------------------------
 
@@ -268,7 +287,15 @@ INSERT INTO `questions` (`id_q`, `text`, `id_creator`, `type`) VALUES
 (114, '123???', 5, 'single'),
 (115, '1234????', 5, 'multiple'),
 (116, '123???', 5, 'single'),
-(117, '1234????', 5, 'multiple');
+(117, '1234????', 5, 'multiple'),
+(118, '123', 5, 'single'),
+(119, 'gggg', 5, 'single'),
+(120, '123', 5, 'single'),
+(121, '123', 5, 'single'),
+(122, '', 5, 'single'),
+(123, 'Ques1', 5, 'single'),
+(124, 'Ques2', 5, 'single'),
+(125, 'Ques3', 5, 'multiple');
 
 -- --------------------------------------------------------
 
@@ -297,7 +324,12 @@ INSERT INTO `tests` (`id_t`, `title`, `count_of_questions`, `max_mark`, `tags`, 
 (5, 'My_Test', 2, 20, '#mytest', 5),
 (6, 'My_Test', 2, 20, '#mytest', 5),
 (7, 'My_Test', 2, 20, '#mytest', 5),
-(8, 'My_Test', 2, 20, '#mytest', 5);
+(8, 'My_Test', 2, 20, '#mytest', 5),
+(9, '123', 1, 20, '123213123123', 5),
+(10, ',fdsmfmsdfnksdnflndsf', 1, 15, 'dsfsdfsdfsdf', 5),
+(11, '123', 1, 20, 'tag', 5),
+(12, '123', 2, 0, '', 5),
+(13, 'My New Test', 3, 30, '#mynewtest', 5);
 
 -- --------------------------------------------------------
 
@@ -330,7 +362,26 @@ INSERT INTO `tests_structure` (`id_t`, `id_q`, `id_a`, `id_creator`) VALUES
 (8, 117, 64, 5),
 (8, 117, 65, 5),
 (8, 117, 66, 5),
-(8, 117, 67, 5);
+(8, 117, 67, 5),
+(9, 118, 68, 5),
+(9, 118, 69, 5),
+(10, 119, 70, 5),
+(10, 119, 71, 5),
+(10, 119, 72, 5),
+(11, 120, 73, 5),
+(11, 120, 74, 5),
+(12, 121, 75, 5),
+(12, 121, 76, 5),
+(12, 121, 77, 5),
+(13, 123, 78, 5),
+(13, 123, 79, 5),
+(13, 123, 80, 5),
+(13, 124, 81, 5),
+(13, 124, 82, 5),
+(13, 125, 83, 5),
+(13, 125, 84, 5),
+(13, 125, 85, 5),
+(13, 125, 86, 5);
 
 --
 -- Indexes for dumped tables
@@ -394,7 +445,7 @@ ALTER TABLE `accounts`
 -- AUTO_INCREMENT for table `answers`
 --
 ALTER TABLE `answers`
-  MODIFY `id_a` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id_a` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
 -- AUTO_INCREMENT for table `marks`
@@ -406,13 +457,13 @@ ALTER TABLE `marks`
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id_q` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
+  MODIFY `id_q` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
 
 --
 -- AUTO_INCREMENT for table `tests`
 --
 ALTER TABLE `tests`
-  MODIFY `id_t` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_t` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Constraints for dumped tables
