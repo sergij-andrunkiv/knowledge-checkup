@@ -8,7 +8,7 @@
     <title>Помилка - Knowledge Checkup</title>
 </head>
 <body>
-    <h1>Виникла помилка. Можливо було відправлено не POST-запит.</h1>
+    <h1>{{if .ErrorMessage}}{{.ErrorMessage}}{{else}}Виникла невідома помилка. Спробуйте ще раз пізніше.{{end}}</h1>
     <p><a href="/">Повернутися на головну</a></p>
 </body>
 </html>
