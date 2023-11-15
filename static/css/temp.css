@@ -1,0 +1,37 @@
+section, header, footer {
+    max-width: 1140px;
+    margin: 0 auto;
+}
+
+nav > li {
+    display: inline-block;
+    padding: 0 10px;
+}
+
+.question {
+    margin-bottom: 15px;
+    width: 440px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.question-text {
+    margin-bottom: 4px;
+}
+
+.answer {
+    margin-top: 10px;
+}
+
+button, input[type='radio'], input[type='checkbox'] {
+    cursor: pointer;
+}
+
+button + button {
+    margin-left: 15px;
+}
+
+a + button {
+    margin-left: 15px;
+}
