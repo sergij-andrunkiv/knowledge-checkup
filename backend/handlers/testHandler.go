@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"knowledge_checkup/backend/model"
 	"net/http"
+	"strconv"
 )
 
 // функція збереження питань і варіантів відповідей для тесту
@@ -68,4 +69,71 @@ func SendTestsInformationToClient(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(tests)
+}
+
+// Завантажити дані про тест для подальшого редагування
+func GetTestToEdit(w http.ResponseWriter, r *http.Request) {
+	var test model.TestEntity
+	testId, err := strconv.Atoi(r.URL.Query().Get("id"))
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	test.LoadById(testId)
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(test)
+}
+
+// Зберегти відредагований тест
+func SaveTest(w http.ResponseWriter, r *http.Request) {
+	var editData model.EditJSONPayload
+
+	err := json.NewDecoder(r.Body).Decode(&editData)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Спочатку відбувається видалення питань та відповідей
+	err = editData.Test.HandleQuestionAndAnswerDeletion(editData.QuestionsToDelete, editData.AnswersToDelete)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Потім зберігаються зміни
+	err = editData.Test.Save()
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+// Видалити тест
+func DeleteTest(w http.ResponseWriter, r *http.Request) {
+	var test model.TestEntity
+	testId, err := strconv.Atoi(r.URL.Query().Get("id"))
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	test.LoadById(testId)
+
+	err = test.Delete()
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

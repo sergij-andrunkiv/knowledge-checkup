@@ -52,6 +52,7 @@ func SetupRoutes() {
 	http.HandleFunc("/account", configurableHadnler(handlers.AccountPage, "GET", model.USER))                    // Сторінка користувача
 	http.HandleFunc("/testslist", configurableHadnler(handlers.TestsListPage, "GET", model.GUEST))               // Сторінка тестів
 	http.HandleFunc("/testconstructor", configurableHadnler(handlers.TestConstructorPage, "GET", model.TEACHER)) // Сторінка конструктору тесту
+	http.HandleFunc("/test/edit", configurableHadnler(handlers.EditTestPage, "GET", model.TEACHER))              // Сторінка редагування тесту
 
 	// Робота з акаунтом
 	http.HandleFunc("/handleRegistration", configurableHadnler(handlers.HandleRegistration, "POST", model.GUEST))   // Обробник реєстрації
@@ -61,7 +62,9 @@ func SetupRoutes() {
 	// Робота з тестами
 	http.HandleFunc("/saveTestQuestionsAnswersChanges", configurableHadnler(handlers.SaveTestQuestionsAnswersChanges, "POST", model.TEACHER)) // Обробник збереження питань і варіантів відповідей в БД
 	http.HandleFunc("/sendTestsInformationToClient", configurableHadnler(handlers.SendTestsInformationToClient, "GET", model.TEACHER))        // Отримання інформації про тести
-	http.HandleFunc("/test/edit", configurableHadnler(handlers.EditTestPage, "GET", model.TEACHER))
+	http.HandleFunc("/getTestToEdit", configurableHadnler(handlers.GetTestToEdit, "GET", model.TEACHER))                                      // Отримання інформації про тест для редагування
+	http.HandleFunc("/saveEditedTest", configurableHadnler(handlers.SaveTest, "PUT", model.TEACHER))                                          // Зберегти тест після редагування
+	http.HandleFunc("/test/delete", configurableHadnler(handlers.DeleteTest, "DELETE", model.TEACHER))
 
 	// Налаштування файлового серверу для статичних ресурсів
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
