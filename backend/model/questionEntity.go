@@ -102,6 +102,56 @@ func (q *QuestionEntity) Delete(tx *sql.Tx) error {
 	return err
 }
 
+// Перевірити, чи коректна відповідь на питання
+func (q *QuestionEntity) CheckAnswers(selectedAnswerIds []int) float32 {
+	var result float32 = 0
+
+	answerValue := q.getCorrectAnswerValue()
+
+	for _, answerId := range selectedAnswerIds {
+		answer := q.findAnswer(answerId)
+
+		if answer.IsCorrect {
+			if q.Type == SINGLE_ANSWER {
+				result = 1
+				return result
+			} else {
+				result += answerValue
+			}
+		} else {
+			if q.Type == MULTIPLE_ANSWERS && result != 0 {
+				result -= answerValue
+			}
+		}
+	}
+
+	return result
+}
+
+// Знайти відповідь
+func (q *QuestionEntity) findAnswer(aID int) AnswerEntity {
+	for _, answer := range q.AnswerOptions {
+		if answer.ID == aID {
+			return answer
+		}
+	}
+
+	return AnswerEntity{}
+}
+
+// Отримати відносну ціну правильної відповіді на питання
+func (q *QuestionEntity) getCorrectAnswerValue() float32 {
+	var correctAnswersCount float32 = 0
+
+	for _, answer := range q.AnswerOptions {
+		if answer.IsCorrect {
+			correctAnswersCount++
+		}
+	}
+
+	return 1 / correctAnswersCount
+}
+
 // Створення нового питання
 func (q *QuestionEntity) createNew(tx *sql.Tx, creatorId int, testId int64) error {
 	insert, err := tx.Exec("INSERT INTO questions(text, id_creator, type) VALUES(?, ?, ?)", q.Label, creatorId, q.Type)

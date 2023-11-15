@@ -1,6 +1,7 @@
 package model
 
 import (
+	"database/sql"
 	"knowledge_checkup/backend/dataStorage"
 )
 
@@ -62,9 +63,8 @@ func (t *TestEntity) Save() error {
 	return t.update()
 }
 
-// Отримати список тестів
+// Отримати список тестів за авторством вчителя
 func (t *TestEntity) GetListForTeacher(teacherId int) ([]TestEntity, error) {
-	var testList []TestEntity
 	db := dataStorage.GetDB()
 	defer db.Close()
 
@@ -73,6 +73,27 @@ func (t *TestEntity) GetListForTeacher(teacherId int) ([]TestEntity, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	return t.getList(rows)
+}
+
+// Отримати список всіх тестів
+func (t *TestEntity) GetList() ([]TestEntity, error) {
+	db := dataStorage.GetDB()
+	defer db.Close()
+
+	rows, err := db.Query("SELECT * FROM tests")
+
+	if err != nil {
+		return nil, err
+	}
+
+	return t.getList(rows)
+}
+
+// Згенерувати спсиок тестів на основі виконаного запиту
+func (t *TestEntity) getList(rows *sql.Rows) ([]TestEntity, error) {
+	var testList []TestEntity
 
 	for rows.Next() {
 		var testItem TestEntity
@@ -139,6 +160,34 @@ func (t *TestEntity) Delete() error {
 	}
 
 	return tx.Commit()
+}
+
+// Перевірити тест
+func (t *TestEntity) Submit(submission []SubmitTestJSONPayload) (float32, float32, error) {
+	var result float32 = 0
+
+	for _, questionSubmission := range submission {
+		question := t.findQuestion(questionSubmission.QuestionId)
+		result += question.CheckAnswers(questionSubmission.SelectedAnswersId)
+	}
+
+	return result, result * t.getQuestionValue(), nil
+}
+
+// Отримати к-сть балів, яке нараховуєтсья за одне питання
+func (t *TestEntity) getQuestionValue() float32 {
+	return float32(t.MaxMark / len(t.Questions))
+}
+
+// Знайти питання
+func (t *TestEntity) findQuestion(qId int) QuestionEntity {
+	for _, question := range t.Questions {
+		if question.ID == qId {
+			return question
+		}
+	}
+
+	return QuestionEntity{}
 }
 
 // Створення нового тесту

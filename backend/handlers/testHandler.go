@@ -71,6 +71,22 @@ func SendTestsInformationToClient(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(tests)
 }
 
+// функція інформації про тест до клієнта (весь спсиок)
+func GetTestList(w http.ResponseWriter, r *http.Request) {
+	var testEntity model.TestEntity
+
+	tests, err := testEntity.GetList()
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	// передавання об'єкту
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(tests)
+}
+
 // Завантажити дані про тест для подальшого редагування
 func GetTestToEdit(w http.ResponseWriter, r *http.Request) {
 	var test model.TestEntity
@@ -136,4 +152,68 @@ func DeleteTest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+// Перевірити тест
+func SubmitTest(w http.ResponseWriter, r *http.Request) {
+	var test model.TestEntity
+	var submission []model.SubmitTestJSONPayload
+	var markResult model.TestResultEntity
+	var userAccount model.Account
+
+	userAccount.LoadFromSession(r)
+
+	testId, err := strconv.Atoi(r.URL.Query().Get("id"))
+
+	if err != nil {
+		fmt.Print(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&submission)
+
+	if err != nil {
+		fmt.Print(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	test.LoadById(testId)
+
+	correctAnswers, resultMark, err := test.Submit(submission)
+
+	if err != nil {
+		fmt.Print(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	markResult.Create(-1, userAccount.Id, testId, resultMark, correctAnswers, 0)
+	err = markResult.Save(r, w)
+
+	if err != nil {
+		fmt.Print(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+// Отримати список результатів
+func GetTestResults(w http.ResponseWriter, r *http.Request) {
+	var userAccount model.Account
+	var testResults model.TestResultEntity
+
+	userAccount.LoadFromSession(r)
+	results, err := testResults.GetUserResults(userAccount.Id)
+
+	if err != nil {
+		fmt.Print(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(results)
 }

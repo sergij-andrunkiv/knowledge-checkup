@@ -14,8 +14,15 @@ type JSONPayload struct {
 	} `json:"answers"`
 }
 
+// структура даних при редагуванні тесту
 type EditJSONPayload struct {
 	QuestionsToDelete []int
 	AnswersToDelete   []int
 	Test              TestEntity
+}
+
+// структура даних при прийомі даних про проходження тесту
+type SubmitTestJSONPayload struct {
+	QuestionId        int
+	SelectedAnswersId []int
 }

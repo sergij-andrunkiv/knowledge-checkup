@@ -6,6 +6,7 @@ import (
 	"knowledge_checkup/backend/model"
 	"knowledge_checkup/backend/view"
 	"net/http"
+	"strconv"
 )
 
 // Функція для обробки та відображення головної сторінки
@@ -67,10 +68,44 @@ func AccountPage(w http.ResponseWriter, r *http.Request) {
 
 // Функція для виведення сторінки списка тестів
 func TestsListPage(w http.ResponseWriter, r *http.Request) {
-	view.GetTpl().ExecuteTemplate(w, "testslist_page.html", nil)
+	var userAccount model.Account
+	userAccount.LoadFromSession(r)
+
+	view.GetTpl().ExecuteTemplate(w, "testslist_page.html", userAccount)
 }
 
 // Сторінка редагування тесту
 func EditTestPage(w http.ResponseWriter, r *http.Request) {
 	view.GetTpl().ExecuteTemplate(w, "test_edit_page.html", nil)
+}
+
+// Сторінка проходження тесту
+func TestCompletionPage(w http.ResponseWriter, r *http.Request) {
+	var userAccount model.Account
+	var test model.TestEntity
+	var testAttempt model.TestResultEntity
+
+	userAccount.LoadFromSession(r)
+	testId, err := strconv.Atoi(r.URL.Query().Get("id"))
+
+	if err != nil {
+		view.ErrorPage(w, "Не вдалося знайти тест")
+		return
+	}
+
+	err = test.LoadById(testId)
+
+	if err != nil {
+		view.ErrorPage(w, "Не вдалося знайти тест")
+		return
+	}
+
+	helperData := model.TestWithAccountHelper{
+		UserAccount: userAccount,
+		TestEntity:  test,
+	}
+
+	testAttempt.SetStartAttemptTime(r, w)
+
+	view.GetTpl().ExecuteTemplate(w, "test_completion.html", helperData)
 }
