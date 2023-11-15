@@ -8,22 +8,22 @@
         }
     </style>
     <title>Конструктор тесту - Knowledge Checkup</title>
+    {{template "imports"}}
 </head>
 <body>
-    <h1>Конструктор тесту</h1>
     <header>
-        <p>Дії:</p>
+        <h1>Конструктор тесту</h1>
         {{template "teacherMenu"}}
     </header>
     <section>
         <h2>Редагування тесту</h2>
-        <div>
-            <label for="testTitle">Назва тесту:</label>
-            <input type="text" id="testTitle" name="testTitle">
-            <label for="maxMark">Максимальна оцінка:</label>
-            <input type="number" id="maxMark" name="maxMark">
-            <label for="tags">Теги:</label>
-            <input type="text" id="tags" name="tags">
+        <div class="test-data-container">
+            <label for="testTitle">Назва тесту:</label><br>
+            <input type="text" id="testTitle" name="testTitle"><br><br>
+            <label for="maxMark">Максимальна оцінка:</label><br>
+            <input type="number" id="maxMark" name="maxMark"><br><br>
+            <label for="tags">Теги:</label><br>
+            <input type="text" id="tags" name="tags"><br><br>
         </div>
         <div id="questions"></div>
         <button class="add-question">Додати питання</button>

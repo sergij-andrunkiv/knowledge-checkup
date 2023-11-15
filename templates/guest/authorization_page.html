@@ -6,16 +6,21 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Авторизація - Knowledge Checkup</title>
+    {{template "imports"}}
 </head>
 <body>
-    <h1>Авторизація</h1>
-    <form action="/handleAuthorization" method="post">
-        <label for="loginEmail">Логін (E-mail):</label>
-        <input type="text" id="loginEmail" name="loginEmail" required><br><br>
-        <label for="loginPassword">Пароль:</label>
-        <input type="password" id="loginPassword" name="loginPassword" required><br><br>
-        <input type="submit" value="Увійти">
-    </form>
-    <p><a href="/">Повернутися на головну</a></p>
+    <header>
+        <h1>Авторизація</h1>
+    </header>
+    <section>
+        <form action="/handleAuthorization" method="post">
+            <label for="loginEmail">Логін (E-mail):</label>
+            <input type="text" id="loginEmail" name="loginEmail" required><br><br>
+            <label for="loginPassword">Пароль:</label>
+            <input type="password" id="loginPassword" name="loginPassword" required><br><br>
+            <input type="submit" value="Увійти">
+        </form>
+        <p><a href="/">Повернутися на головну</a></p>
+    </section>
 </body>
 </html>
