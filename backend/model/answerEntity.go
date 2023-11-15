@@ -24,7 +24,7 @@ func (a *AnswerEntity) Save(tx *sql.Tx, questionId int64, testId int64, creatorI
 		return a.createNew(tx, questionId, testId, creatorId)
 	}
 
-	return a.update()
+	return a.update(tx)
 }
 
 // Зберегти відповідь в базу
@@ -45,6 +45,13 @@ func (a *AnswerEntity) createNew(tx *sql.Tx, questionId int64, testId int64, cre
 	return nil
 }
 
-func (a *AnswerEntity) update() error {
+// Оновити існуюче питання
+func (a *AnswerEntity) update(tx *sql.Tx) error {
+	_, err := tx.Exec("UPDATE answers SET text = ?, is_correct = ? WHERE id_a = ?", a.Label, a.IsCorrect, a.ID)
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

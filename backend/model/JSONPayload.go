@@ -13,3 +13,9 @@ type JSONPayload struct {
 		IsCorrect int    `json:"isCorrect"`
 	} `json:"answers"`
 }
+
+type EditJSONPayload struct {
+	QuestionsToDelete []int
+	AnswersToDelete   []int
+	Test              TestEntity
+}
