@@ -1,10 +1,5 @@
 // перевірка незбережених змін при перезавантаженні
 let unsavedChanges = false;
-window.onbeforeunload = function() {
-    if (unsavedChanges) {
-        return 'У вас є незбережені зміни. Ви впевнені, що хочете покинути цю сторінку?';
-    }
-};
 
 let questionCounter = 0; // лічильник питань
 
@@ -164,7 +159,7 @@ function sendDataToServer() {
         .then(response => {
             // Обробка відповіді від сервера
             if (response.ok) {
-                // Дії, які виконуються при успішній відправці даних
+                location.href = "/mytests" // редірект на сторінку всіх тестів
             } else {
                 // Дії в разі помилки
             }
@@ -175,7 +170,7 @@ function sendDataToServer() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    document.querySelector(".add-question").addEventListener("click", addQuestion);
-    document.querySelector(".add-multi-answer-question").addEventListener("click", addMultiAnswerQuestion);
-    document.querySelector(".submit-changes").addEventListener("click", sendDataToServer);
+    document.querySelector(".add-question") && document.querySelector(".add-question").addEventListener("click", addQuestion);
+    document.querySelector(".add-multi-answer-question") && document.querySelector(".add-multi-answer-question").addEventListener("click", addMultiAnswerQuestion);
+    document.querySelector(".submit-changes") && document.querySelector(".submit-changes").addEventListener("click", sendDataToServer);
 })
