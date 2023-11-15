@@ -13,21 +13,16 @@
     <section>
         <h2>Кабінет керування створеними тестами</h2>
         <form action="">
-            <label for="createdTestFilter">Фільтр створених тестів</label>
-            <input type="text" id="createdTestFilter" name="createdTestFilter">
-            <input type="radio" id="title" name="filter_option" value="title">
-            <label for="title">Назва</label>
-            <input type="radio" id="id" name="filter_option" value="id">
-            <label for="id">ID</label><br>
-            <input type="submit" value="Знайти">
+            <label for="createdTestFilter">Пошук:</label> <br>
+            <input type="text" id="createdTestFilter" name="createdTestFilter" placeholder="Введіть назву або ID тесту">
         </form>
         <h2>Попередній перегляд останніх створених тестів</h2>
         <form action="">
             <label for="sort_options">Сортувати за:</label>
             <select id="sort_options" name="sort_options">
-                <option value="title">Назвою</option>
-                <option value="create_date">Датою створення</option>
-                <option value="modification_date">Датою модифікації</option>
+                <option value="Title" data-type="string">Назвою</option>
+                <option value="CreatedAt" data-type="date">Датою створення</option>
+                <option value="UpdatedAt" data-type="date">Датою модифікації</option>
             </select>
         </form>
         <main></main>

@@ -20,6 +20,8 @@ const fieldOrder = {
     "Tags": 5
 }
 
+let testState = null;
+
 // Видалення тесту
 const deleteTest = id => {
     fetch(`/test/delete?id=${id}`, {
@@ -86,10 +88,20 @@ const loadData = function() {
         return response.json();
     })
     .then((state) => {
-        renderData(state)
+        testState = state
+        renderData(testState)
     });
 }
 
 window.addEventListener("DOMContentLoaded", loadData);
+
+document.querySelector("#createdTestFilter").addEventListener("keyup", e => {
+    const queryString = e.target.value
+    TestFilter.search(testState, queryString, renderData)
+})
+
+document.querySelector("#sort_options").addEventListener("change", e => {
+    TestFilter.sort(testState, e.target.value, renderData, e.target.selectedOptions[0].dataset.type);
+})
 
 }) ();
