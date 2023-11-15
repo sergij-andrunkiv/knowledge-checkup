@@ -4,7 +4,7 @@ const TestFilter = {
             return callback(testList)
         }
 
-        callback(testList.filter(test => test.Title.toLowerCase().includes(queryString.toLowerCase()) || test.ID == parseInt(queryString)))
+        callback(testList.filter(test => test.Title.toLowerCase().includes(queryString.toLowerCase()) || test.Tags.toLowerCase().includes(queryString.toLowerCase()) || test.ID == parseInt(queryString)))
     },
 
     sort: (testList, field, callback, type) => {
@@ -25,7 +25,7 @@ const TestFilter = {
                     return 0
                 }
                 case "date": {
-                    return new Date(b[field]) - new Date(a[field])
+                    return new Date(b[field]) - new Date(a[fieldw])
                 }
             }
         }))
