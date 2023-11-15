@@ -1,3 +1,5 @@
+( ()=> {
+// Назви для JSON полів 
 const namingMap = {
     "ID": "ID",
     "CreatedAt": "Дата створення",
@@ -8,13 +10,41 @@ const namingMap = {
     "Tags": "Теги"
 }
 
+const fieldOrder = {
+    "ID": 2,
+    "CreatedAt": 6,
+    "UpdatedAt": 7,
+    "Title": 1,
+    "QuestionCount": 3,
+    "MaxMark": 4,
+    "Tags": 5
+}
+
+// Видалення тесту
+const deleteTest = id => {
+    fetch(`/test/delete?id=${id}`, {
+        method: "DELETE"
+    }).then(response => {
+        if (response.ok) {
+            loadData();
+        }
+        console.log(response) // TODO: нормально обробити відповідь
+    })
+}
+
+// Відображення списку тестів
 renderData = (state) => {
     const container = document.querySelector("main");
-    container.innerHTM = "";
+    container.innerHTML = "";
 
-    state.map(testItem => {
+    state && state.map(testItem => {
         const testInfoContainer = document.createElement('div');
         const constructorButton = document.createElement('button');
+        const deleteButton = document.createElement('button');
+        deleteButton.addEventListener("click", () => {
+            deleteTest(testItem.ID)
+        })
+        deleteButton.textContent = "Видалити"
         const constructorLink = document.createElement('a');
         constructorButton.textContent = "Перейти в конструктор";
         constructorLink.append(constructorButton)
@@ -25,7 +55,9 @@ renderData = (state) => {
 
         let testInfoList = document.createElement("ul")
 
-        for (let key in testItem) {
+        let keys = Object.keys(testItem).sort((a, b) => fieldOrder[a] - fieldOrder[b]);
+
+        for (let key of keys) {
             if (!namingMap[key]) {
                 continue;
             }
@@ -37,11 +69,12 @@ renderData = (state) => {
 
         testInfoContainer.appendChild(testInfoList)
         testInfoContainer.appendChild(constructorLink)
+        testInfoContainer.appendChild(deleteButton)
         container.append(testInfoContainer)
     })
 }
 
-window.addEventListener("DOMContentLoaded", function() {
+const loadData = function() {
     fetch('/sendTestsInformationToClient')
     .then((response) => {
         if (response.status != 200) {
@@ -55,4 +88,8 @@ window.addEventListener("DOMContentLoaded", function() {
     .then((state) => {
         renderData(state)
     });
-});
+}
+
+window.addEventListener("DOMContentLoaded", loadData);
+
+}) ();
