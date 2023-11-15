@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Ноя 15 2023 г., 15:39
+-- Время создания: Ноя 15 2023 г., 21:55
 -- Версия сервера: 8.0.24
 -- Версия PHP: 7.4.27
 
@@ -102,8 +102,19 @@ CREATE TABLE `marks` (
   `user` int UNSIGNED NOT NULL,
   `test` int UNSIGNED NOT NULL,
   `mark` int UNSIGNED NOT NULL,
-  `count_of_correct_answers` int UNSIGNED NOT NULL
+  `count_of_correct_answers` int UNSIGNED NOT NULL,
+  `time_taken_s` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32;
+
+--
+-- Дамп данных таблицы `marks`
+--
+
+INSERT INTO `marks` (`id_m`, `user`, `test`, `mark`, `count_of_correct_answers`, `time_taken_s`) VALUES
+(8, 5, 20, 10, 2, 5),
+(9, 5, 20, 10, 2, 5),
+(10, 5, 21, 50, 2, 12),
+(11, 1, 20, 20, 4, 44);
 
 -- --------------------------------------------------------
 
@@ -127,7 +138,7 @@ INSERT INTO `questions` (`id_q`, `text`, `id_creator`, `type`) VALUES
 (145, 'Second', 5, 'multiple'),
 (146, 'Thirdth', 5, 'single'),
 (147, 'Fourth', 5, 'single'),
-(148, '1', 5, 'single'),
+(148, '1', 5, 'multiple'),
 (149, '2', 5, 'single');
 
 -- --------------------------------------------------------
@@ -153,7 +164,7 @@ CREATE TABLE `tests` (
 
 INSERT INTO `tests` (`id_t`, `created_at`, `updated_at`, `title`, `count_of_questions`, `max_mark`, `tags`, `creator`) VALUES
 (20, '2023-11-15 12:28:20', '2023-11-15 12:29:26', 'First Test', 4, 20, '#tag1, #tag2, #tag3', 5),
-(21, '2023-11-15 12:34:08', '2023-11-15 12:34:08', 'Test 2', 2, 50, '1', 5);
+(21, '2023-11-15 12:34:08', '2023-11-15 12:59:27', 'Test 2', 2, 50, '1', 5);
 
 --
 -- Триггеры `tests`
@@ -266,7 +277,7 @@ ALTER TABLE `answers`
 -- AUTO_INCREMENT для таблицы `marks`
 --
 ALTER TABLE `marks`
-  MODIFY `id_m` int UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_m` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT для таблицы `questions`
