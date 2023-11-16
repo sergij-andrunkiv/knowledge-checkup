@@ -1,6 +1,7 @@
 package model
 
 import (
+	"errors"
 	"fmt"
 	"knowledge_checkup/backend/dataStorage"
 	"net/http"
@@ -66,10 +67,21 @@ func (a *Account) PasswordsDoNotMatch(repeatPassword string) bool {
 func (a *Account) Save() error {
 	db := dataStorage.GetDB()
 	defer db.Close()
-	insert, err := db.Query(fmt.Sprintf("INSERT INTO accounts (last_name, first_name, middle_name, year_of_birth, nickname, email, password, approved, gender, educational_institution, teacher_status) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', 'N/A', 'N/A', 0)", a.Last_name, a.First_name, a.Middle_name, a.Year_of_birth, a.Nickname, a.Email, a.preperePassword(a.Password), a.Approved))
-	defer insert.Close()
 
-	return err
+	if a.Id == -1 {
+		insert, err := db.Query(fmt.Sprintf("INSERT INTO accounts (last_name, first_name, middle_name, year_of_birth, nickname, email, password, approved, gender, educational_institution, teacher_status) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', 'N/A', 'N/A', 0)", a.Last_name, a.First_name, a.Middle_name, a.Year_of_birth, a.Nickname, a.Email, a.preperePassword(a.Password), a.Approved))
+		defer insert.Close()
+		return err
+	}
+
+	update, err := db.Query("UPDATE accounts SET last_name = ?, first_name = ?, middle_name = ?, year_of_birth = ?, nickname = ?, email = ?, password = ?, approved = ?, gender = ?, educational_institution = ?, teacher_status = ? WHERE id = ?", a.Last_name, a.First_name, a.Middle_name, a.Year_of_birth, a.Nickname, a.Email, a.Password, a.Approved, a.Gender, a.Educational_institution, a.Teacher_status, a.Id)
+
+	if err != nil {
+		return err
+	}
+
+	update.Close()
+	return nil
 }
 
 // Завантажити дані користувача з сесії
@@ -86,13 +98,29 @@ func (a *Account) LoadFromSession(r *http.Request) bool {
 		a.Email = session.Values["email"].(string)
 		a.Password = session.Values["password"].(string)
 		a.Approved = session.Values["approved"].(int)
-		a.Gender = ""
-		a.Educational_institution = ""
+		a.Gender = session.Values["gender"].(string)
+		a.Educational_institution = session.Values["educational_institutional"].(string)
 		a.Teacher_status = session.Values["teacher_status"].(int)
 		return true
 	} else {
 		return false
 	}
+}
+
+// Змінити пароль
+func (a *Account) ChangePassword(passwordData *PasswordChangeJSONPayload) (error, string) {
+
+	if a.PasswordsDoNotMatch(a.preperePassword(passwordData.OldPassword)) {
+		return errors.New("Неправильний старий пароль"), "Неправильний старий пароль"
+	}
+
+	a.Password = a.preperePassword(passwordData.NewPassword)
+
+	if a.PasswordsDoNotMatch(a.preperePassword(passwordData.NewPasswordRepeat)) {
+		return errors.New("Новий пароль та повтор нового паролю не збігаються"), "Новий пароль та повтор нового паролю не збігаються"
+	}
+
+	return a.Save(), ""
 }
 
 // Авторизуватись в акаунт користувача
@@ -101,6 +129,55 @@ func (a *Account) LoadByAuth(email string, password string) error {
 	defer db.Close()
 
 	return db.QueryRow("SELECT id, last_name, first_name, middle_name, year_of_birth, nickname, email, approved, gender, educational_institution, teacher_status FROM accounts WHERE email = ? AND password = ?", email, a.preperePassword(password)).Scan(&a.Id, &a.Last_name, &a.First_name, &a.Middle_name, &a.Year_of_birth, &a.Nickname, &a.Email, &a.Approved, &a.Gender, &a.Educational_institution, &a.Teacher_status)
+}
+
+// Отримати користувача за ID
+func (a *Account) LoadById(id int) error {
+	db := dataStorage.GetDB()
+	defer db.Close()
+
+	return db.QueryRow("SELECT id, last_name, first_name, middle_name, year_of_birth, nickname, email, approved, gender, educational_institution, teacher_status, password FROM accounts WHERE id = ?", id).Scan(&a.Id, &a.Last_name, &a.First_name, &a.Middle_name, &a.Year_of_birth, &a.Nickname, &a.Email, &a.Approved, &a.Gender, &a.Educational_institution, &a.Teacher_status, &a.Password)
+}
+
+// Оновити дані
+func (a *Account) ChangeGeneralData(diff *Account, w http.ResponseWriter, r *http.Request) error {
+	if diff.Last_name != a.Last_name {
+		a.Last_name = diff.Last_name
+	}
+
+	if diff.First_name != a.First_name {
+		a.First_name = diff.First_name
+	}
+
+	if diff.Middle_name != a.Middle_name {
+		a.Middle_name = diff.Middle_name
+	}
+
+	if diff.Year_of_birth != a.Year_of_birth {
+		a.Year_of_birth = diff.Year_of_birth
+	}
+
+	if diff.Nickname != a.Nickname {
+		a.Nickname = diff.Nickname
+	}
+
+	if diff.Gender != a.Gender {
+		a.Gender = diff.Gender
+	}
+
+	if diff.Educational_institution != a.Educational_institution {
+		a.Educational_institution = diff.Educational_institution
+	}
+
+	err := a.Save()
+
+	if err != nil {
+		return err
+	}
+
+	a.SaveToSession(w, r)
+
+	return nil
 }
 
 // Зберігаємо дані користувача у сесії
@@ -126,6 +203,33 @@ func (a *Account) SaveToSession(w http.ResponseWriter, r *http.Request) error {
 // Перевірити, чи є в користувача права вчителя
 func (a *Account) IsTeacher() bool {
 	return a.Teacher_status == 1
+}
+
+// Отримати список вчителів
+func (a Account) GetTeachers() ([]Account, error) {
+	var teachers []Account
+
+	db := dataStorage.GetDB()
+	defer db.Close()
+
+	rows, err := db.Query("SELECT first_name, last_name, email FROM accounts WHERE teacher_status = ?", 1)
+
+	if err != nil {
+		return teachers, err
+	}
+
+	for rows.Next() {
+		var teacher Account
+		err := rows.Scan(&teacher.First_name, &teacher.Last_name, &teacher.Email)
+
+		if err != nil {
+			return teachers, err
+		}
+
+		teachers = append(teachers, teacher)
+	}
+
+	return teachers, nil
 }
 
 // TODO: хешування паролю?

@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"knowledge_checkup/backend/dataStorage"
 	"knowledge_checkup/backend/model"
+	"knowledge_checkup/backend/services"
 	"knowledge_checkup/backend/view"
 	"net/http"
 	"strconv"
@@ -90,4 +92,123 @@ func HandleAuthorization(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, "/", http.StatusSeeOther) // Перенаправлення на сторінку привітання після успішної авторизації
+}
+
+// Оновити акаунт
+func UpdateAccount(w http.ResponseWriter, r *http.Request) {
+	var currentUser model.Account
+	var updatedUser model.Account
+
+	currentUser.LoadFromSession(r)
+
+	err := json.NewDecoder(r.Body).Decode(&updatedUser)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Println(err)
+		return
+	}
+
+	err = currentUser.ChangeGeneralData(&updatedUser, w, r)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Println(err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+// Надіслати запит на підвищення повноважень
+func SendPromotionRequest(w http.ResponseWriter, r *http.Request) {
+	var teacherUser model.Account
+	var currentUser model.Account
+	currentUser.LoadFromSession(r)
+
+	err := json.NewDecoder(r.Body).Decode(&teacherUser)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Println(err)
+		return
+	}
+
+	if r.URL.Scheme == "" {
+		r.URL.Scheme = "http"
+	}
+
+	confirmationLink := fmt.Sprintf("%s://%s/account/promotion_request/confirm?userId=%d", r.URL.Scheme, r.Host, currentUser.Id)
+
+	messageBody := fmt.Sprintf("Користувач %s %s надіслав вам запит на підвищення повноважень. Перейдіть за <a href='%s' target='_blank'>посиланням</a>(%s) щоб підтвердити.", currentUser.First_name, currentUser.Last_name, confirmationLink, confirmationLink)
+
+	err = services.SendEmail([]string{teacherUser.Email}, "Запит на підвищення повноважень", messageBody)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Println(err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+// Підвищити користувача до вчителя
+func PromoteUser(w http.ResponseWriter, r *http.Request) {
+	userId, err := strconv.Atoi(r.URL.Query().Get("userId"))
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		view.ErrorPage(w, "Некоректний запит.")
+		return
+	}
+
+	var promotedUser model.Account
+	err = promotedUser.LoadById(userId)
+
+	if err != nil {
+		fmt.Printf(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		view.ErrorPage(w, "Відбулась внутрішня помилка.")
+		return
+	}
+
+	promotedUser.Teacher_status = 1
+
+	err = promotedUser.Save()
+
+	if err != nil {
+		fmt.Printf(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		view.ErrorPage(w, "Відбулась внутрішня помилка.")
+		return
+	}
+
+	services.SendEmail([]string{promotedUser.Email}, "Ваш запит схвалено", "Ваш запит на підвищення прав доступу схвалено.")
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+// Змінити пароль
+func ChangePassword(w http.ResponseWriter, r *http.Request) {
+	var passwordData model.PasswordChangeJSONPayload
+	var currentUser model.Account
+
+	err := json.NewDecoder(r.Body).Decode(&passwordData)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+	}
+
+	currentUser.LoadFromSession(r)
+	currentUser.LoadById(currentUser.Id)
+	err, _ = currentUser.ChangePassword(&passwordData)
+
+	if err != nil {
+		fmt.Printf(err.Error())
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
