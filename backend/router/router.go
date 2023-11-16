@@ -53,12 +53,17 @@ func SetupRoutes() {
 	http.HandleFunc("/testslist", configurableHadnler(handlers.TestsListPage, "GET", model.GUEST))               // Сторінка тестів
 	http.HandleFunc("/testconstructor", configurableHadnler(handlers.TestConstructorPage, "GET", model.TEACHER)) // Сторінка конструктору тесту
 	http.HandleFunc("/test/edit", configurableHadnler(handlers.EditTestPage, "GET", model.TEACHER))              // Сторінка редагування тесту
-	http.HandleFunc("/test/start", configurableHadnler(handlers.TestCompletionPage, "GET", model.GUEST))
+	http.HandleFunc("/test/start", configurableHadnler(handlers.TestCompletionPage, "GET", model.GUEST))         // Сторінка проходження тесту
+	http.HandleFunc("/account/settings", configurableHadnler(handlers.AccountSettingsPage, "GET", model.USER))   // Сторінка налаштування профілю
 
 	// Робота з акаунтом
-	http.HandleFunc("/handleRegistration", configurableHadnler(handlers.HandleRegistration, "POST", model.GUEST))   // Обробник реєстрації
-	http.HandleFunc("/handleLogout", configurableHadnler(handlers.HandleLogout, "GET", model.GUEST))                // Обробник розлогінення
-	http.HandleFunc("/handleAuthorization", configurableHadnler(handlers.HandleAuthorization, "POST", model.GUEST)) // Обробник авторизації
+	http.HandleFunc("/handleRegistration", configurableHadnler(handlers.HandleRegistration, "POST", model.GUEST))          // Обробник реєстрації
+	http.HandleFunc("/handleLogout", configurableHadnler(handlers.HandleLogout, "GET", model.GUEST))                       // Обробник розлогінення
+	http.HandleFunc("/handleAuthorization", configurableHadnler(handlers.HandleAuthorization, "POST", model.GUEST))        // Обробник авторизації
+	http.HandleFunc("/account/update", configurableHadnler(handlers.UpdateAccount, "PATCH", model.GUEST))                  // Зберегти зміни в налаштуваннях профіля
+	http.HandleFunc("/account/promotion_request", configurableHadnler(handlers.SendPromotionRequest, "POST", model.USER))  // Надіслати запит на підвищення повноважень
+	http.HandleFunc("/account/promotion_request/confirm", configurableHadnler(handlers.PromoteUser, "GET", model.TEACHER)) // Підвищити користувача
+	http.HandleFunc("/account/change_password", configurableHadnler(handlers.ChangePassword, "PATCH", model.USER))         // Змінити пароль
 
 	// Робота з тестами
 	http.HandleFunc("/saveTestQuestionsAnswersChanges", configurableHadnler(handlers.SaveTestQuestionsAnswersChanges, "POST", model.TEACHER)) // Обробник збереження питань і варіантів відповідей в БД

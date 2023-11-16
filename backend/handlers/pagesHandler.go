@@ -109,3 +109,22 @@ func TestCompletionPage(w http.ResponseWriter, r *http.Request) {
 
 	view.GetTpl().ExecuteTemplate(w, "test_completion.html", helperData)
 }
+
+// Сторінка налаштування акаунта
+func AccountSettingsPage(w http.ResponseWriter, r *http.Request) {
+	var userAccount model.Account
+	userAccount.LoadFromSession(r)
+
+	teachers, err := userAccount.GetTeachers()
+
+	if err != nil {
+		fmt.Print(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	view.GetTpl().ExecuteTemplate(w, "account_settings.html", map[string]interface{}{
+		"Account":  userAccount,
+		"Teachers": teachers,
+	})
+}
