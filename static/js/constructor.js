@@ -162,6 +162,7 @@ function sendDataToServer() {
                 location.href = "/mytests" // редірект на сторінку всіх тестів
             } else {
                 // Дії в разі помилки
+                checkMessages()
             }
         })
         .catch(error => {

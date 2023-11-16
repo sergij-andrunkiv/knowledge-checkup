@@ -98,25 +98,29 @@ func HandleAuthorization(w http.ResponseWriter, r *http.Request) {
 func UpdateAccount(w http.ResponseWriter, r *http.Request) {
 	var currentUser model.Account
 	var updatedUser model.Account
+	var msgMn services.MessageManager
 
 	currentUser.LoadFromSession(r)
 
 	err := json.NewDecoder(r.Body).Decode(&updatedUser)
 
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
 		fmt.Println(err)
+		msgMn.Push(r, w, model.MESSAGE_STATUS_FAILURE, "Помилка", "Не вдалось зберегти зміни")
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	err = currentUser.ChangeGeneralData(&updatedUser, w, r)
 
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Println(err)
+		msgMn.Push(r, w, model.MESSAGE_STATUS_FAILURE, "Помилка", "Не вдалось зберегти зміни")
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
+	msgMn.Push(r, w, model.MESSAGE_STATUS_SUCCESS, "Збережено", "Ваші дані успішно оновлено!")
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -124,6 +128,7 @@ func UpdateAccount(w http.ResponseWriter, r *http.Request) {
 func SendPromotionRequest(w http.ResponseWriter, r *http.Request) {
 	var teacherUser model.Account
 	var currentUser model.Account
+	var msgMn services.MessageManager
 	currentUser.LoadFromSession(r)
 
 	err := json.NewDecoder(r.Body).Decode(&teacherUser)
@@ -145,16 +150,19 @@ func SendPromotionRequest(w http.ResponseWriter, r *http.Request) {
 	err = services.SendEmail([]string{teacherUser.Email}, "Запит на підвищення повноважень", messageBody)
 
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		msgMn.Push(r, w, model.MESSAGE_STATUS_FAILURE, "Помилка", "Не вдалось надіслати запит")
 		fmt.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
+	msgMn.Push(r, w, model.MESSAGE_STATUS_SUCCESS, "Надіслано", "Запит на підвищення рівня доступу надіслано обраному вчителю!")
 	w.WriteHeader(http.StatusOK)
 }
 
 // Підвищити користувача до вчителя
 func PromoteUser(w http.ResponseWriter, r *http.Request) {
+	var msgMn services.MessageManager
 	userId, err := strconv.Atoi(r.URL.Query().Get("userId"))
 
 	if err != nil {
@@ -186,11 +194,13 @@ func PromoteUser(w http.ResponseWriter, r *http.Request) {
 
 	services.SendEmail([]string{promotedUser.Email}, "Ваш запит схвалено", "Ваш запит на підвищення прав доступу схвалено.")
 
+	msgMn.Push(r, w, model.MESSAGE_STATUS_SUCCESS, "Опрацьовано", fmt.Sprintf("Рівень доступу користувача %s підвищено!", promotedUser.Nickname))
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 // Змінити пароль
 func ChangePassword(w http.ResponseWriter, r *http.Request) {
+	var msgMn services.MessageManager
 	var passwordData model.PasswordChangeJSONPayload
 	var currentUser model.Account
 
@@ -202,13 +212,21 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 
 	currentUser.LoadFromSession(r)
 	currentUser.LoadById(currentUser.Id)
-	err, _ = currentUser.ChangePassword(&passwordData)
+	err, msg := currentUser.ChangePassword(&passwordData)
 
 	if err != nil {
 		fmt.Printf(err.Error())
+		msgMn.Push(r, w, model.MESSAGE_STATUS_FAILURE, "Помилка", msg)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
+	msgMn.Push(r, w, model.MESSAGE_STATUS_SUCCESS, "Готовно", "Ваш пароль успішно змінено!")
 	w.WriteHeader(http.StatusOK)
+}
+
+// Отримати повідомлення
+func GetMessages(w http.ResponseWriter, r *http.Request) {
+	var msgManager services.MessageManager
+	w.Write([]byte(msgManager.Flush(r, w)))
 }

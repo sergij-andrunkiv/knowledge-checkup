@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"knowledge_checkup/backend/model"
+	"knowledge_checkup/backend/services"
 	"net/http"
 	"strconv"
 )
@@ -11,12 +12,14 @@ import (
 // функція збереження питань і варіантів відповідей для тесту
 func SaveTestQuestionsAnswersChanges(w http.ResponseWriter, r *http.Request) {
 	var data []model.JSONPayload //пустий масив структур ПитанняВідповіді
+	var msgMn services.MessageManager
 
 	// обробка отриманих питань/відповідей у форматі JSON і збереженння у data
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil || len(data) == 0 {
 		fmt.Println(err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		msgMn.Push(r, w, model.MESSAGE_STATUS_FAILURE, "Помилка", "Не вдалося зберегти тест")
 		return
 	}
 
@@ -47,8 +50,10 @@ func SaveTestQuestionsAnswersChanges(w http.ResponseWriter, r *http.Request) {
 
 	if testEntity.Save() != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		msgMn.Push(r, w, model.MESSAGE_STATUS_FAILURE, "Помилка", "Не вдалося зберегти тест")
 	}
 
+	msgMn.Push(r, w, model.MESSAGE_STATUS_SUCCESS, "Готово", "Тест збережено")
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -104,11 +109,13 @@ func GetTestToEdit(w http.ResponseWriter, r *http.Request) {
 
 // Зберегти відредагований тест
 func SaveTest(w http.ResponseWriter, r *http.Request) {
+	var msgMn services.MessageManager
 	var editData model.EditJSONPayload
 
 	err := json.NewDecoder(r.Body).Decode(&editData)
 
 	if err != nil {
+		msgMn.Push(r, w, model.MESSAGE_STATUS_FAILURE, "Помилка", "Відбулась помилка при збереженні тесту")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -117,6 +124,7 @@ func SaveTest(w http.ResponseWriter, r *http.Request) {
 	err = editData.Test.HandleQuestionAndAnswerDeletion(editData.QuestionsToDelete, editData.AnswersToDelete)
 
 	if err != nil {
+		msgMn.Push(r, w, model.MESSAGE_STATUS_FAILURE, "Помилка", "Відбулась помилка при збереженні тесту")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -125,19 +133,23 @@ func SaveTest(w http.ResponseWriter, r *http.Request) {
 	err = editData.Test.Save()
 
 	if err != nil {
+		msgMn.Push(r, w, model.MESSAGE_STATUS_FAILURE, "Помилка", "Відбулась помилка при збереженні тесту")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	msgMn.Push(r, w, model.MESSAGE_STATUS_SUCCESS, "Готово", "Тест збережено")
 	w.WriteHeader(http.StatusOK)
 }
 
 // Видалити тест
 func DeleteTest(w http.ResponseWriter, r *http.Request) {
+	var msgMn services.MessageManager
 	var test model.TestEntity
 	testId, err := strconv.Atoi(r.URL.Query().Get("id"))
 
 	if err != nil {
+		msgMn.Push(r, w, model.MESSAGE_STATUS_FAILURE, "Помилка", "Не вдалось видалити тест")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -147,15 +159,18 @@ func DeleteTest(w http.ResponseWriter, r *http.Request) {
 	err = test.Delete()
 
 	if err != nil {
+		msgMn.Push(r, w, model.MESSAGE_STATUS_FAILURE, "Помилка", "Не вдалось видалити тест")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	msgMn.Push(r, w, model.MESSAGE_STATUS_SUCCESS, "Готово", "Тест видалено")
 	w.WriteHeader(http.StatusOK)
 }
 
 // Перевірити тест
 func SubmitTest(w http.ResponseWriter, r *http.Request) {
+	var msgMn services.MessageManager
 	var test model.TestEntity
 	var submission []model.SubmitTestJSONPayload
 	var markResult model.TestResultEntity
@@ -167,6 +182,7 @@ func SubmitTest(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		fmt.Print(err)
+		msgMn.Push(r, w, model.MESSAGE_STATUS_FAILURE, "Помилка", "При перевірці тесту виникла помилка")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -175,6 +191,7 @@ func SubmitTest(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		fmt.Print(err)
+		msgMn.Push(r, w, model.MESSAGE_STATUS_FAILURE, "Помилка", "При перевірці тесту виникла помилка")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -185,6 +202,7 @@ func SubmitTest(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		fmt.Print(err)
+		msgMn.Push(r, w, model.MESSAGE_STATUS_FAILURE, "Помилка", "При перевірці тесту виникла помилка")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -194,10 +212,12 @@ func SubmitTest(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		fmt.Print(err)
+		msgMn.Push(r, w, model.MESSAGE_STATUS_FAILURE, "Помилка", "При перевірці тесту виникла помилка")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
+	msgMn.Push(r, w, model.MESSAGE_STATUS_SUCCESS, "Тест пройдено", "Тест успішно пройдено!")
 	w.WriteHeader(http.StatusOK)
 }
 

@@ -23,9 +23,10 @@
             body: JSON.stringify(accountData)
         }).then(response => {
             if (!response.ok) {
-                alert("Виникла помилка")
                 console.log(response)
             }
+            window.scrollTo(0, 0)
+			checkMessages()
         })
     }
 
@@ -43,9 +44,10 @@
             body: JSON.stringify(teacher)
         }).then(response => {
             if (!response.ok) {
-                alert("Виникла помилка")
                 console.log(response)
             }
+            window.scrollTo(0, 0)
+			checkMessages()
         })
     }
 
@@ -65,9 +67,10 @@
             body: JSON.stringify(passwordData)
         }).then(response => {
             if (!response.ok) {
-                alert("Виникла помилка")
                 console.log(response)
             }
+            window.scrollTo(0, 0)
+			checkMessages()
         })
     }
 

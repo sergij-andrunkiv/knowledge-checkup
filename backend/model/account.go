@@ -110,6 +110,10 @@ func (a *Account) LoadFromSession(r *http.Request) bool {
 // Змінити пароль
 func (a *Account) ChangePassword(passwordData *PasswordChangeJSONPayload) (error, string) {
 
+	if passwordData.NewPassword == "" || passwordData.OldPassword == "" || passwordData.NewPasswordRepeat == "" {
+		return errors.New("Заповніть всі поля"), "Заповніть всі поля"
+	}
+
 	if a.PasswordsDoNotMatch(a.preperePassword(passwordData.OldPassword)) {
 		return errors.New("Неправильний старий пароль"), "Неправильний старий пароль"
 	}

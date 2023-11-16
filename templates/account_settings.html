@@ -37,7 +37,7 @@
                 </div>
             </fieldset>
             <fieldset>
-                <legend>Додатково інформація</legend>
+                <legend>Додаткова інформація</legend>
                 <div>
                     <label for="gender">Стать:</label><br>
                     <select name="gender" id="gender">
@@ -54,7 +54,7 @@
             <br>
             <button class="save-general-settings">Зберегти</button>
         </fieldset>
-        {{if ne .Teacher_status 1}}
+        {{if ne .Account.Teacher_status 1}}
             <fieldset>
                 <legend>Підвищення доступу</legend>
                 <fieldset>

@@ -30,7 +30,7 @@ const renderTestList = (containerSelector, endpoint, isEditable) => {
             if (response.ok) {
                 loadData();
             }
-            console.log(response) // TODO: нормально обробити відповідь
+            checkMessages()
         })
     }
 

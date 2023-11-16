@@ -64,6 +64,7 @@ func SetupRoutes() {
 	http.HandleFunc("/account/promotion_request", configurableHadnler(handlers.SendPromotionRequest, "POST", model.USER))  // Надіслати запит на підвищення повноважень
 	http.HandleFunc("/account/promotion_request/confirm", configurableHadnler(handlers.PromoteUser, "GET", model.TEACHER)) // Підвищити користувача
 	http.HandleFunc("/account/change_password", configurableHadnler(handlers.ChangePassword, "PATCH", model.USER))         // Змінити пароль
+	http.HandleFunc("/account/get_messages", configurableHadnler(handlers.GetMessages, "GET", model.USER))                 // Отримати системні повідомлення
 
 	// Робота з тестами
 	http.HandleFunc("/saveTestQuestionsAnswersChanges", configurableHadnler(handlers.SaveTestQuestionsAnswersChanges, "POST", model.TEACHER)) // Обробник збереження питань і варіантів відповідей в БД

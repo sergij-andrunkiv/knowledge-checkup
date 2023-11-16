@@ -63,3 +63,13 @@ fieldset {
     margin-top: 20px;
     width: 400px;
 }
+
+.message-success {
+    background-color: green;
+    color: #fff
+}
+
+.message-failure {
+    background-color: rgb(238, 59, 59);
+    color: #fff
+}

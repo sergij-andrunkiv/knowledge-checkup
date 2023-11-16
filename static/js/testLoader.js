@@ -218,8 +218,11 @@
 				Test: currentState
 			})
 		}).then(response => {
-			console.log(response) // відповідь
-			loadData()
+			if (response.ok) {
+				loadData()
+			}
+			window.scrollTo(0, 0)
+			checkMessages()
 		})
 	}
 
