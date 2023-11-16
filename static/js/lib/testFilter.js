@@ -25,7 +25,7 @@ const TestFilter = {
                     return 0
                 }
                 case "date": {
-                    return new Date(b[field]) - new Date(a[fieldw])
+                    return new Date(b[field]) - new Date(a[field])
                 }
             }
         }))
