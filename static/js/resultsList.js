@@ -3,10 +3,14 @@
 
     const render = data => {
         data && data.map(resultItem => {
+            let timeTaken = ''
+
+            timeTaken = resultItem.TimeTakenS >= 60 ? (resultItem.TimeTakenS / 60).toFixed(2) + ' хв' : resultItem.TimeTakenS + ' с'
+
             const tableRow = `
                 <tr>
                     <td>${resultItem.Test.Title}</td>
-                    <td>${(resultItem.TimeTakenS / 60).toFixed(2)} хв</td>
+                    <td>${timeTaken}</td>
                     <td>${resultItem.Mark}</td>
                 </tr>
             `
