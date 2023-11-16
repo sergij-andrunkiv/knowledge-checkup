@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Налаштування - Knowledge Checkup</title>
+    {{template "imports"}}
+</head>
+<body>
+    <header>
+        <h1>Налаштування профілю</h1>
+        {{template "automenu" .Account}}
+    </header>
+    <section>
+        <fieldset>
+            <legend>Ваші дані</legend>
+            <fieldset>
+                <legend>Основна інформація</legend>
+                <div>
+                    <label for="first-name">Ім'я:</label><br>
+                    <input type="text" id="first-name" value="{{.Account.First_name}}"><br><br>
+                </div>
+                <div>
+                    <label for="last-name">Прізвище:</label><br>
+                    <input type="text" id="last-name" value="{{.Account.Last_name}}"><br><br>
+                </div>
+                <div>
+                    <label for="middle-name">По-батькові:</label><br>
+                    <input type="text" id="middle-name" value="{{.Account.Middle_name}}"><br><br>
+                </div>
+                <div>
+                    <label for="year-of-birth">Рік народження:</label><br>
+                    <input type="text" id="year-of-birth" value="{{.Account.Year_of_birth}}"><br><br>
+                </div>
+                <div>
+                    <label for="nickname">Nickname:</label><br>
+                    <input type="text" id="nickname" value="{{.Account.Nickname}}"><br><br>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Додатково інформація</legend>
+                <div>
+                    <label for="gender">Стать:</label><br>
+                    <select name="gender" id="gender">
+                        <option value="N/A">Не обрано</option>
+                        <option value="Ч" {{if eq .Account.Gender "Ч"}} selected {{end}}>Чоловік</option>
+                        <option value="Ж" {{if eq .Account.Gender "Ж"}} selected {{end}}>Жінка</option>
+                    </select><br><br>
+                </div>
+                <div>
+                    <label for="education-institution">Освітній заклад:</label><br>
+                    <input type="text" id="education-institution" value="{{.Account.Educational_institution}}"><br><br>
+                </div>
+            </fieldset>
+            <br>
+            <button class="save-general-settings">Зберегти</button>
+        </fieldset>
+        {{if ne .Teacher_status 1}}
+            <fieldset>
+                <legend>Підвищення доступу</legend>
+                <fieldset>
+                    <legend>Надіслати запит</legend>
+                    <div>
+                        <label for="education-institution">Вчитель:</label><br>
+                        <select name="teacher" id="teacher">
+                            {{- range $teacher := .Teachers}}
+                                <option value="{{$teacher.Email}}">{{$teacher.First_name}} {{$teacher.Last_name}}</option>
+                            {{- end}}
+                        </select><br><br>
+                        <button class="send-request">Надіслати запит</button>
+                    </div>
+                </fieldset>
+            </fieldset>
+        {{end}}
+        <fieldset>
+            <legend>Налаштування безпеки</legend>
+            <fieldset>
+                <legend>Змінити пароль</legend>
+                <div>
+                    <label for="old-password">Старий пароль:</label><br>
+                    <input type="password" id="old-password"><br><br>
+                </div>
+                <div>
+                    <label for="new-password">Новий пароль:</label><br>
+                    <input type="password" id="new-password"><br><br>
+                </div>
+                <div>
+                    <label for="new-password-repeat">Повторіть новий пароль:</label><br>
+                    <input type="password" id="new-password-repeat"><br><br>
+                </div>
+                <button class="change-password">Зберегти</button>
+            </fieldset>
+        </fieldset>
+    </section>
+    <script src="/static/js/accountSettings.js"></script>
+</body>
+</html>
