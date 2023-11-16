@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Конструктор тесту - Knowledge Checkup</title>
+    {{template "imports"}}
+</head>
+<body>
+    <header>
+        <h1>Конструктор тестів</h1>
+        {{template "teacherMenu"}}
+    </header>
+    <section>
+        <h2>Редагування тесту</h2>
+        <div class="test-data-container">
+            <label for="testTitle">Назва тесту:</label><br>
+            <input type="text" id="testTitle" name="testTitle"><br><br>
+            <label for="maxMark">Максимальна оцінка:</label><br>
+            <input type="number" id="maxMark" name="maxMark"><br><br>
+            <label for="tags">Теги:</label><br>
+            <input type="text" id="tags" name="tags"><br><br>
+        </div>
+        <div id="questions"></div>
+        <button class="add-question-editor">Додати питання</button>
+        <button class="add-multi-answer-question-editor">Додати питання з декількома відповідями</button>
+        <button class="submit-edited-changes">Зберегти зміни</button>
+    </section>
+    <script src="/static/js/testLoader.js"></script>
+</body>
+</html>

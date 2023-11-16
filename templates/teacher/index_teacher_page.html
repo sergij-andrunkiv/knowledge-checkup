@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Головна - Knowledge Checkup</title>
+        {{template "imports"}}
+    </head>
+    <body>
+        <header>
+            <h1>Головна сторінка (для вчителя)</h1>
+            {{template "teacherMenu"}}
+            <h1>Вітаємо, {{ .Last_name }} {{ .First_name }} {{ .Middle_name }}! (a.k.a. {{ .Nickname }}!)</h1>
+        </header>
+        <section>
+            <h2>*Тут буде лого*</h2>
+        </section>
+
+        <p><a href="about">Про нас</a></p>
+        <p><a href="help">Допомога</a></p>
+        <p>Knowledge Checkup(c) 2023</p>
+    </body>
+</html>

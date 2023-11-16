@@ -3,8 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Список тестів - Knowledge Checkup</title>
+    {{template "imports"}}
 </head>
 <body>
-    <h1>Попередній перегляд тестів</h1>
+    <header>
+        <h1>Список тестів</h1>
+        {{template "automenu" .}}
+    </header>
+    <section>
+        <h2>Список тестів</h2>
+        <form action="">
+            <label for="createdTestFilter">Пошук:</label> <br>
+            <input type="text" id="createdTestFilter" name="createdTestFilter" placeholder="Введіть назву або ID тесту"><br><br>
+            <label for="sort_options">Сортувати за:</label><br>
+            <select id="sort_options" name="sort_options">
+                <option value="Title" data-type="string">Назвою</option>
+                <option value="CreatedAt" data-type="date">Датою створення</option>
+                <option value="UpdatedAt" data-type="date">Датою модифікації</option>
+            </select>
+        </form>
+        <main>
+
+        </main>
+    </section>
+    <section>
+        <h2>Ваші минулі результати</h2>
+        <aside class="test-results-container">
+            <table>
+                <tr>
+                    <th>Назва тесту</th>
+                    <th>Час проходження</th>
+                    <th>Оцінка</th>
+                </tr>
+            </table>
+        </aside>
+    </section>
+    <script>
+        renderTestList("main", "/test/list", false)
+    </script>
+    <script src="/static/js/resultsList.js"></script>
 </body>
 </html>

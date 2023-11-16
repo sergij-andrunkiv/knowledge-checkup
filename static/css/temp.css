@@ -1,0 +1,75 @@
+section, header, footer {
+    max-width: 1140px;
+    margin: 0 auto;
+}
+
+nav > li {
+    display: inline-block;
+    padding: 0 10px;
+}
+
+.question {
+    margin-bottom: 15px;
+    width: 440px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.question-text {
+    margin-bottom: 4px;
+}
+
+.answer {
+    margin-top: 10px;
+}
+
+button, input[type='radio'], input[type='checkbox'] {
+    cursor: pointer;
+}
+
+button + button {
+    margin-left: 15px;
+}
+
+a + button {
+    margin-left: 15px;
+}
+
+table {
+    border-collapse:collapse;
+    border-spacing: 0;
+    width: 100%;
+}
+
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid #000;
+    text-align: left;
+}
+
+legend {
+    background-color: #000;
+    color: #fff;
+    padding: 3px 6px;
+}
+  
+input {
+    margin: 0.4rem;
+}
+  
+fieldset {
+    margin: 0 auto;
+    margin-top: 20px;
+    width: 400px;
+}
+
+.message-success {
+    background-color: green;
+    color: #fff
+}
+
+.message-failure {
+    background-color: rgb(238, 59, 59);
+    color: #fff
+}

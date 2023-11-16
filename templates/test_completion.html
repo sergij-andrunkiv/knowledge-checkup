@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Пройти тест - Knowledge Checkup</title>
+        {{template "imports"}}
+    </head>
+    <body>
+        <header>
+            <h1>Проходження тесту</h1>
+            {{template "automenu" .UserAccount}}
+        </header>
+        <section>
+            <h2>{{.TestEntity.Title}}</h2>
+            {{if .UserAccount.Email}}
+                <div class="questions">
+                    {{- range $i, $question := .TestEntity.Questions}}
+                        <div class="question" data-question-id="{{$question.ID}}">
+                            <h3>
+                                <strong>#{{$i}}:</strong>
+                                {{$question.Label}}
+                            </h3>
+                            <ul class="answers-container">
+                                {{- range $answer := $question.AnswerOptions}}
+                                    <li class="answer">
+                                        {{if eq $question.Type "single"}}
+                                            <input type="radio" class="answer-input" data-answer-id="{{$answer.ID}}" id="answer-{{$answer.ID}}" name="question-{{$question.ID}}-answer">
+                                        {{else}}
+                                            <input type="checkbox" class="answer-input" data-answer-id="{{$answer.ID}}" id="answer-{{$answer.ID}}" name="question-{{$question.ID}}-answer">
+                                        {{end}}
+                                        <label for="answer-{{$answer.ID}}">{{$answer.Label}}</label>
+                                    </li>
+                                {{- end}}
+                            </ul>
+                        </div>
+                    {{- end}}
+                </div>
+                <button class="submit-test-button">Надіслати</button>
+            {{else}}
+                <h2>Увійдіть в акаунт для проходження тесту</h2>
+            {{end}}
+        </section>
+        <script src="/static/js/submitTest.js"></script>
+    </body>
+</html>

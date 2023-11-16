@@ -1,0 +1,11 @@
+{{define "automenu"}}
+    {{if .Email}}
+        {{if .Teacher_status}}
+            {{template "teacherMenu"}}
+        {{else}}
+            {{template "userMenu"}}
+        {{end}}
+    {{else}}
+        {{template "guestMenu"}}
+    {{end}}
+{{end}}
