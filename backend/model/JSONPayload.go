@@ -26,3 +26,10 @@ type SubmitTestJSONPayload struct {
 	QuestionId        int
 	SelectedAnswersId []int
 }
+
+// Структура даних для зміни паролю
+type PasswordChangeJSONPayload struct {
+	OldPassword       string
+	NewPassword       string
+	NewPasswordRepeat string
+}
