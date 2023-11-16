@@ -42,18 +42,23 @@ const renderTestList = (containerSelector, endpoint, isEditable) => {
         state && state.map(testItem => {
             const testInfoContainer = document.createElement('div');
             const constructorButton = document.createElement('button');
+            const statisticsButton = document.createElement('button');
             const deleteButton = document.createElement('button');
             deleteButton.addEventListener("click", () => {
                 deleteTest(testItem.ID)
             })
             deleteButton.textContent = "Видалити"
+            statisticsButton.textContent = "Статистика"
             const constructorLink = document.createElement('a');
+            const statisticsLink = document.createElement('a');
             const startTestLink = document.createElement('a');
             startTestLink.innerText = "Пройти тест"
             startTestLink.href=`/test/start?id=${testItem.ID}`
             constructorButton.textContent = "Перейти в конструктор";
             constructorLink.append(constructorButton)
             constructorLink.href=`/test/edit?id=${testItem.ID}`
+            statisticsLink.append(statisticsButton)
+            statisticsLink.href=`/test/statistics?id=${testItem.ID}`
             testInfoContainer.classList.add("test-card-container")
 
             testInfoContainer.id = "test-container-" + testItem.ID;
@@ -76,6 +81,7 @@ const renderTestList = (containerSelector, endpoint, isEditable) => {
             if (isEditable) {
                 testInfoContainer.appendChild(constructorLink)
                 testInfoContainer.appendChild(deleteButton)
+                testInfoContainer.appendChild(statisticsLink)
             } else {
                 testInfoContainer.appendChild(startTestLink)
             }
