@@ -64,7 +64,7 @@ func SetupRoutes() {
 	http.HandleFunc("/account/promotion_request", configurableHadnler(handlers.SendPromotionRequest, "POST", model.USER))  // Надіслати запит на підвищення повноважень
 	http.HandleFunc("/account/promotion_request/confirm", configurableHadnler(handlers.PromoteUser, "GET", model.TEACHER)) // Підвищити користувача
 	http.HandleFunc("/account/change_password", configurableHadnler(handlers.ChangePassword, "PATCH", model.USER))         // Змінити пароль
-	http.HandleFunc("/account/get_messages", configurableHadnler(handlers.GetMessages, "GET", model.USER))                 // Отримати системні повідомлення
+	http.HandleFunc("/account/get_messages", configurableHadnler(handlers.GetMessages, "GET", model.GUEST))                // Отримати системні повідомлення
 
 	// Робота з тестами
 	http.HandleFunc("/saveTestQuestionsAnswersChanges", configurableHadnler(handlers.SaveTestQuestionsAnswersChanges, "POST", model.TEACHER)) // Обробник збереження питань і варіантів відповідей в БД
@@ -74,7 +74,7 @@ func SetupRoutes() {
 	http.HandleFunc("/test/delete", configurableHadnler(handlers.DeleteTest, "DELETE", model.TEACHER))                                        // Видалити тест
 	http.HandleFunc("/test/list", configurableHadnler(handlers.GetTestList, "GET", model.GUEST))                                              // Отримати список всіх тестів
 	http.HandleFunc("/test/submit", configurableHadnler(handlers.SubmitTest, "POST", model.USER))                                             // Перевірити результат проходження тесту
-	http.HandleFunc("/test/results", configurableHadnler(handlers.GetTestResults, "GET", model.USER))                                         // Отримати результати тестів
+	http.HandleFunc("/test/results", configurableHadnler(handlers.GetTestResults, "GET", model.GUEST))                                        // Отримати результати тестів
 
 	// Налаштування файлового серверу для статичних ресурсів
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
