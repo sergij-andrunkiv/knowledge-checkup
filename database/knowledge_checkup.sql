@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Хост: 127.0.0.1:3306
--- Время создания: Ноя 15 2023 г., 21:55
--- Версия сервера: 8.0.24
--- Версия PHP: 7.4.27
+-- Host: localhost
+-- Generation Time: Nov 29, 2023 at 11:26 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,17 +18,17 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- База данных: `knowledge_checkup`
+-- Database: `knowledge_checkup`
 --
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `accounts`
+-- Table structure for table `accounts`
 --
 
 CREATE TABLE `accounts` (
-  `id` int UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `last_name` varchar(50) NOT NULL,
   `first_name` varchar(50) NOT NULL,
   `middle_name` varchar(50) NOT NULL,
@@ -40,10 +40,10 @@ CREATE TABLE `accounts` (
   `gender` enum('Ч','Ж','N/A') DEFAULT NULL,
   `educational_institution` varchar(70) DEFAULT NULL,
   `teacher_status` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
--- Дамп данных таблицы `accounts`
+-- Dumping data for table `accounts`
 --
 
 INSERT INTO `accounts` (`id`, `last_name`, `first_name`, `middle_name`, `year_of_birth`, `nickname`, `email`, `password`, `approved`, `gender`, `educational_institution`, `teacher_status`) VALUES
@@ -51,26 +51,26 @@ INSERT INTO `accounts` (`id`, `last_name`, `first_name`, `middle_name`, `year_of
 (2, '123', '123', '123', '123', '123', '123', '123', 1, 'Ч', ' ', 0),
 (3, '1', '1', '1', '1', '1', '1', '1', 1, NULL, '', 0),
 (4, '2000', '2000', '2000', '2000', '2000', '2000', '2000', 1, NULL, NULL, 0),
-(5, 'Andrunkiv', 'Sergiy', 'Romanovich', '2003', 'sergiy_2000', 'sergij.andrunkiv@gmail.com', 'qwerty123', 1, 'N/A', 'N/A', 1),
-(6, 'test123', 'test123', 'test123', '2000', 'testik', 'test123', 'test123', 1, 'N/A', 'N/A', 0),
-(8, 'Lastname', 'Firstname', 'Middlename', '1888', 'Nickname', 'email@gmail.com', '12345', 1, 'N/A', 'N/A', 0),
-(9, 'Surname', 'Name', 'Middlenam', '2222', 'nickname', 'test@gmail.com', 'password', 1, 'N/A', 'N/A', 0);
+(5, 'Andrunkiv', 'Sergiy', 'Romanovich', '2003', 'sergiy_2000', 'sergij.andrunkiv@gmail.com', 'qwerty', 1, 'Ч', 'dfdfdf', 1),
+(6, 'test123', 'test123', 'test123', '2000', 'test_123', 'test123', '', 1, 'N/A', 'N/A', 0),
+(10, 'Андруньків', 'Сергій', 'Романович', '2003', 'sergiy_andr', 'sergiy.andrunkiv@gmail.com', 'test123456', 1, 'Ч', '123456', 1),
+(11, 'test123', 'test123', 'test123', '2000', 'test123', 'copini2940@eachart.com', 'test12345', 1, 'N/A', 'N/A', 0);
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `answers`
+-- Table structure for table `answers`
 --
 
 CREATE TABLE `answers` (
-  `id_a` int UNSIGNED NOT NULL,
-  `id_q` int UNSIGNED NOT NULL,
+  `id_a` int(10) UNSIGNED NOT NULL,
+  `id_q` int(10) UNSIGNED NOT NULL,
   `text` varchar(255) NOT NULL,
-  `is_correct` int UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `is_correct` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
--- Дамп данных таблицы `answers`
+-- Dumping data for table `answers`
 --
 
 INSERT INTO `answers` (`id_a`, `id_q`, `text`, `is_correct`) VALUES
@@ -89,48 +89,70 @@ INSERT INTO `answers` (`id_a`, `id_q`, `text`, `is_correct`) VALUES
 (146, 148, '1 1', 0),
 (147, 148, '1 2', 1),
 (148, 149, '2 1', 0),
-(149, 149, '2 2', 1);
+(149, 149, '2 2', 1),
+(156, 154, 'ans1', 0),
+(157, 154, 'ans2', 1),
+(158, 155, '1', 1),
+(159, 155, '2', 0),
+(160, 155, '3', 1),
+(161, 156, 'Ans1_Q1', 0),
+(162, 156, 'Ans2_Q1', 1),
+(163, 156, 'Ans3_Q1', 0),
+(164, 156, 'Ans4_Q1', 0),
+(165, 157, 'Ans1_Q2', 1),
+(166, 157, 'Ans2_Q2', 0),
+(167, 157, 'Ans3_Q2', 1),
+(168, 157, 'Ans4_Q2', 0);
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `marks`
+-- Table structure for table `marks`
 --
 
 CREATE TABLE `marks` (
-  `id_m` int UNSIGNED NOT NULL,
-  `user` int UNSIGNED NOT NULL,
-  `test` int UNSIGNED NOT NULL,
-  `mark` int UNSIGNED NOT NULL,
-  `count_of_correct_answers` int UNSIGNED NOT NULL,
-  `time_taken_s` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf32;
+  `id_m` int(10) UNSIGNED NOT NULL,
+  `user` int(10) UNSIGNED NOT NULL,
+  `test` int(10) UNSIGNED NOT NULL,
+  `mark` int(10) UNSIGNED NOT NULL,
+  `count_of_correct_answers` int(10) UNSIGNED NOT NULL,
+  `time_taken_s` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_general_ci;
 
 --
--- Дамп данных таблицы `marks`
+-- Dumping data for table `marks`
 --
 
 INSERT INTO `marks` (`id_m`, `user`, `test`, `mark`, `count_of_correct_answers`, `time_taken_s`) VALUES
 (8, 5, 20, 10, 2, 5),
 (9, 5, 20, 10, 2, 5),
 (10, 5, 21, 50, 2, 12),
-(11, 1, 20, 20, 4, 44);
+(11, 1, 20, 20, 4, 44),
+(12, 10, 20, 5, 1, 7),
+(13, 10, 26, 10, 1, 10),
+(14, 10, 26, 20, 2, 7),
+(15, 6, 27, 15, 2, 4),
+(16, 6, 27, 0, 0, 3),
+(17, 5, 27, 15, 2, 14706),
+(18, 5, 20, 10, 2, 22),
+(19, 5, 20, 2, 0, 2),
+(20, 5, 27, 10, 1, 2);
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `questions`
+-- Table structure for table `questions`
 --
 
 CREATE TABLE `questions` (
-  `id_q` int UNSIGNED NOT NULL,
+  `id_q` int(10) UNSIGNED NOT NULL,
   `text` varchar(255) NOT NULL,
-  `id_creator` int UNSIGNED NOT NULL,
+  `id_creator` int(10) UNSIGNED NOT NULL,
   `type` enum('single','multiple') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
--- Дамп данных таблицы `questions`
+-- Dumping data for table `questions`
 --
 
 INSERT INTO `questions` (`id_q`, `text`, `id_creator`, `type`) VALUES
@@ -139,35 +161,41 @@ INSERT INTO `questions` (`id_q`, `text`, `id_creator`, `type`) VALUES
 (146, 'Thirdth', 5, 'single'),
 (147, 'Fourth', 5, 'single'),
 (148, '1', 5, 'multiple'),
-(149, '2', 5, 'single');
+(149, '2', 5, 'single'),
+(154, 'ques1', 10, 'single'),
+(155, 'ques2', 10, 'multiple'),
+(156, 'Question_1', 10, 'single'),
+(157, 'Question_2', 10, 'multiple');
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `tests`
+-- Table structure for table `tests`
 --
 
 CREATE TABLE `tests` (
-  `id_t` int UNSIGNED NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id_t` int(10) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `title` varchar(255) NOT NULL,
-  `count_of_questions` int UNSIGNED NOT NULL,
-  `max_mark` int UNSIGNED NOT NULL,
+  `count_of_questions` int(10) UNSIGNED NOT NULL,
+  `max_mark` int(10) UNSIGNED NOT NULL,
   `tags` varchar(255) NOT NULL,
-  `creator` int UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf32;
+  `creator` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_general_ci;
 
 --
--- Дамп данных таблицы `tests`
+-- Dumping data for table `tests`
 --
 
 INSERT INTO `tests` (`id_t`, `created_at`, `updated_at`, `title`, `count_of_questions`, `max_mark`, `tags`, `creator`) VALUES
 (20, '2023-11-15 12:28:20', '2023-11-15 12:29:26', 'First Test', 4, 20, '#tag1, #tag2, #tag3', 5),
-(21, '2023-11-15 12:34:08', '2023-11-15 12:59:27', 'Test 2', 2, 50, '1', 5);
+(21, '2023-11-15 12:34:08', '2023-11-15 12:59:27', 'Test 2', 2, 50, '1', 5),
+(26, '2023-11-16 16:21:40', '2023-11-16 16:21:40', 'Sample Test', 2, 20, '#sampletest', 10),
+(27, '2023-11-22 19:45:16', '2023-11-22 19:45:16', 'My test', 2, 20, '#mytest', 10);
 
 --
--- Триггеры `tests`
+-- Triggers `tests`
 --
 DELIMITER $$
 CREATE TRIGGER `updated_at` BEFORE UPDATE ON `tests` FOR EACH ROW SET NEW.updated_at = CURRENT_TIMESTAMP()
@@ -177,18 +205,18 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `tests_structure`
+-- Table structure for table `tests_structure`
 --
 
 CREATE TABLE `tests_structure` (
-  `id_t` int UNSIGNED NOT NULL,
-  `id_q` int UNSIGNED NOT NULL,
-  `id_a` int UNSIGNED NOT NULL,
-  `id_creator` int UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf16;
+  `id_t` int(10) UNSIGNED NOT NULL,
+  `id_q` int(10) UNSIGNED NOT NULL,
+  `id_a` int(10) UNSIGNED NOT NULL,
+  `id_creator` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_general_ci;
 
 --
--- Дамп данных таблицы `tests_structure`
+-- Dumping data for table `tests_structure`
 --
 
 INSERT INTO `tests_structure` (`id_t`, `id_q`, `id_a`, `id_creator`) VALUES
@@ -207,27 +235,40 @@ INSERT INTO `tests_structure` (`id_t`, `id_q`, `id_a`, `id_creator`) VALUES
 (21, 148, 146, 5),
 (21, 148, 147, 5),
 (21, 149, 148, 5),
-(21, 149, 149, 5);
+(21, 149, 149, 5),
+(26, 154, 156, 10),
+(26, 154, 157, 10),
+(26, 155, 158, 10),
+(26, 155, 159, 10),
+(26, 155, 160, 10),
+(27, 156, 161, 10),
+(27, 156, 162, 10),
+(27, 156, 163, 10),
+(27, 156, 164, 10),
+(27, 157, 165, 10),
+(27, 157, 166, 10),
+(27, 157, 167, 10),
+(27, 157, 168, 10);
 
 --
--- Индексы сохранённых таблиц
+-- Indexes for dumped tables
 --
 
 --
--- Индексы таблицы `accounts`
+-- Indexes for table `accounts`
 --
 ALTER TABLE `accounts`
   ADD PRIMARY KEY (`id`);
 
 --
--- Индексы таблицы `answers`
+-- Indexes for table `answers`
 --
 ALTER TABLE `answers`
   ADD PRIMARY KEY (`id_a`),
   ADD KEY `Test_2` (`id_q`);
 
 --
--- Индексы таблицы `marks`
+-- Indexes for table `marks`
 --
 ALTER TABLE `marks`
   ADD PRIMARY KEY (`id_m`),
@@ -235,21 +276,21 @@ ALTER TABLE `marks`
   ADD KEY `Test_9` (`test`);
 
 --
--- Индексы таблицы `questions`
+-- Indexes for table `questions`
 --
 ALTER TABLE `questions`
   ADD PRIMARY KEY (`id_q`),
   ADD KEY `Test` (`id_creator`);
 
 --
--- Индексы таблицы `tests`
+-- Indexes for table `tests`
 --
 ALTER TABLE `tests`
   ADD PRIMARY KEY (`id_t`),
   ADD KEY `Test_7` (`creator`);
 
 --
--- Индексы таблицы `tests_structure`
+-- Indexes for table `tests_structure`
 --
 ALTER TABLE `tests_structure`
   ADD PRIMARY KEY (`id_t`,`id_q`,`id_a`,`id_creator`),
@@ -258,70 +299,70 @@ ALTER TABLE `tests_structure`
   ADD KEY `Test_6` (`id_creator`);
 
 --
--- AUTO_INCREMENT для сохранённых таблиц
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT для таблицы `accounts`
+-- AUTO_INCREMENT for table `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
--- AUTO_INCREMENT для таблицы `answers`
+-- AUTO_INCREMENT for table `answers`
 --
 ALTER TABLE `answers`
-  MODIFY `id_a` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=156;
+  MODIFY `id_a` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=169;
 
 --
--- AUTO_INCREMENT для таблицы `marks`
+-- AUTO_INCREMENT for table `marks`
 --
 ALTER TABLE `marks`
-  MODIFY `id_m` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_m` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT для таблицы `questions`
+-- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id_q` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
+  MODIFY `id_q` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=158;
 
 --
--- AUTO_INCREMENT для таблицы `tests`
+-- AUTO_INCREMENT for table `tests`
 --
 ALTER TABLE `tests`
-  MODIFY `id_t` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id_t` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
--- Ограничения внешнего ключа сохраненных таблиц
+-- Constraints for dumped tables
 --
 
 --
--- Ограничения внешнего ключа таблицы `answers`
+-- Constraints for table `answers`
 --
 ALTER TABLE `answers`
   ADD CONSTRAINT `Test_2` FOREIGN KEY (`id_q`) REFERENCES `questions` (`id_q`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ограничения внешнего ключа таблицы `marks`
+-- Constraints for table `marks`
 --
 ALTER TABLE `marks`
   ADD CONSTRAINT `Test_8` FOREIGN KEY (`user`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `Test_9` FOREIGN KEY (`test`) REFERENCES `tests` (`id_t`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ограничения внешнего ключа таблицы `questions`
+-- Constraints for table `questions`
 --
 ALTER TABLE `questions`
   ADD CONSTRAINT `Test` FOREIGN KEY (`id_creator`) REFERENCES `accounts` (`id`);
 
 --
--- Ограничения внешнего ключа таблицы `tests`
+-- Constraints for table `tests`
 --
 ALTER TABLE `tests`
   ADD CONSTRAINT `Test_7` FOREIGN KEY (`creator`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ограничения внешнего ключа таблицы `tests_structure`
+-- Constraints for table `tests_structure`
 --
 ALTER TABLE `tests_structure`
   ADD CONSTRAINT `Test_3` FOREIGN KEY (`id_t`) REFERENCES `tests` (`id_t`) ON DELETE CASCADE ON UPDATE CASCADE,

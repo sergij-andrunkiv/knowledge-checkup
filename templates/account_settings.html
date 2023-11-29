@@ -7,10 +7,11 @@
 </head>
 <body>
     <header>
-        <h1>Налаштування профілю</h1>
+        <h1><img src="../../static/img/logo.jpg" alt=""> Knowledge Checkup</h1>
         {{template "automenu" .Account}}
     </header>
-    <section>
+    <section class="profile-settings">
+        <h1>Налаштування профілю</h1>
         <fieldset>
             <legend>Ваші дані</legend>
             <fieldset>
@@ -55,21 +56,21 @@
             <button class="save-general-settings">Зберегти</button>
         </fieldset>
         {{if ne .Account.Teacher_status 1}}
+        <fieldset>
+            <legend>Підвищення доступу</legend>
             <fieldset>
-                <legend>Підвищення доступу</legend>
-                <fieldset>
-                    <legend>Надіслати запит</legend>
-                    <div>
-                        <label for="education-institution">Вчитель:</label><br>
-                        <select name="teacher" id="teacher">
-                            {{- range $teacher := .Teachers}}
-                                <option value="{{$teacher.Email}}">{{$teacher.First_name}} {{$teacher.Last_name}}</option>
-                            {{- end}}
-                        </select><br><br>
-                        <button class="send-request">Надіслати запит</button>
-                    </div>
-                </fieldset>
+                <legend>Надіслати запит</legend>
+                <div>
+                    <label for="education-institution">Вчитель:</label><br>
+                    <select name="teacher" id="teacher">
+                        {{- range $teacher := .Teachers}}
+                        <option value="{{$teacher.Email}}">{{$teacher.First_name}} {{$teacher.Last_name}}</option>
+                        {{- end}}
+                    </select><br><br>
+                    <button class="send-request">Надіслати запит</button>
+                </div>
             </fieldset>
+        </fieldset>
         {{end}}
         <fieldset>
             <legend>Налаштування безпеки</legend>
@@ -92,5 +93,10 @@
         </fieldset>
     </section>
     <script src="/static/js/accountSettings.js"></script>
+    <footer>
+        <p><a href="about">Про нас</a></p>
+        <p><a href="help">Допомога</a></p>
+        <p>Knowledge Checkup(c) 2023</p>
+    </footer>
 </body>
 </html>

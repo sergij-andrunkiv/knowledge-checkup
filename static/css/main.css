@@ -1,4 +1,444 @@
 /**
  * Тимчасові стилі, видаліть це коли будете робити фронт
  **/
-@import url("/static/css/temp.css");
+/*@import url("/static/css/temp.css");*/
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    color: #333;
+}
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+h1 {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+h1 img {
+    max-width: 50px;
+    margin-right: 10px;
+}
+header p {
+    color: #777;
+}
+.section-container {
+    text-align: center;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.logo-container {
+    flex: 1;
+    text-align: center;
+}
+.logo-container img {
+    max-width: 50%; /* Займає 50% ширини */
+    border-radius: 50%; /* Заокруглення логотипу */
+}
+.logo-text {
+    flex: 1;
+    text-align: center;
+}
+.logo-text p {
+    font-size: 24px; /* Збільшення розміру тексту */
+    max-width: 75%; /* Максимальна ширина тексту для обмеження ширини */
+    margin: 0 auto; /* Відцентрувати текст у його половині */
+    color: #555; /* Зміна кольору тексту */
+    font-style: italic; /* Зміна стилю тексту на курсив */
+}
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 0px;
+
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    height: 150px;
+}
+footer a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 10px;
+}
+footer > p {
+    padding-top: 10px;
+}
+
+/* Optional: Add responsive styles for better mobile experience */
+@media only screen and (max-width: 600px) {
+    header {
+        padding: 10px;
+    }
+
+    footer {
+        padding: 5px;
+    }
+}
+
+
+
+
+
+/*Стилі для панелі навігації*/
+nav {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+nav li {
+    margin-right: 15px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+nav a {
+    text-decoration: none;
+    color: #fff;
+    padding: 8px 15px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+}
+nav a:hover {
+    background-color: #fff;
+    color: #333;
+}
+
+
+
+
+
+/*стилі для форм реєстрації/авторизації*/
+.reg-auth-form {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.reg-auth-form > section {
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    padding: 20px;
+}
+.reg-auth-form > section > form {
+    display: flex;
+    flex-direction: column;
+}
+.reg-auth-form > section > form > label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.reg-auth-form > section > form > input {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.reg-auth-form > section > form > input[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+.reg-auth-form > section > form > input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+.reg-auth-form > section > p {
+    text-align: center;
+    margin-top: 20px;
+}
+.reg-auth-form > section > form > p > a {
+    color: #007bff;
+    text-decoration: none;
+}
+.reg-auth-form > section > form > p > a:hover {
+    text-decoration: underline;
+}
+
+
+
+
+
+
+/*стилі для списку тестів*/
+.test-list > form {
+    margin-top: 20px;
+}
+.test-list > form > label {
+    font-weight: bold;
+}
+.test-list > form > input, select {
+    margin-bottom: 10px;
+    padding: 8px;
+}
+.test-list > main {
+    margin-top: 20px;
+
+}
+.test-list > main > div {
+    border: 1px solid black;
+}
+.test-list, .tests-results {
+    text-align: center;
+    padding: 20px;
+}
+.tests-results > h2 {
+    margin-bottom: 10px;
+}
+.tests-results > .test-results-container {
+    margin-top: 20px;
+}
+.tests-results > .test-results-container > table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.tests-results > .test-results-container > table > th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+.tests-results > .test-results-container > table > th {
+    background-color: #333;
+    color: #fff;
+}
+
+
+
+
+
+
+
+
+
+
+
+/*стилі для конструктора тесту*/
+section.test-editing-full {
+    display: flex;
+}
+section.test-editing > h1 {
+    margin-bottom: 20px;
+}
+section.test-editing {
+    text-align: center;
+    padding: 20px;
+    flex: 7; /* 70% ширина */
+}
+/* Додає стилі для елементів, які генеруються динамічно */
+section.test-editing > div#questions > div > label {
+    font-weight: bold;
+    color: #333;
+}
+section.test-editing > div#questions > div > input {
+    width: 50%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+section.test-editing > div#questions > div > button {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+section.test-editing > div#questions > div > button:hover {
+    background-color: #555;
+}
+
+.test-data-container {
+    max-width: 300px;
+    margin: 0 auto;
+    text-align: left;
+}
+.test-data-container > label {
+    font-weight: bold;
+}
+.test-data-container > input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+#questions {
+    margin-top: 20px;
+}
+section.test-editing > button {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+section.test-editing > button:hover {
+    background-color: #555;
+}
+section.work-with-test {
+    text-align: center;
+    padding: 20px;
+    flex: 3; /* 30% ширина */
+}
+section.work-with-test > h2 {
+    margin-bottom: 20px;
+}
+.work-with-test > p > a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    margin-top: 10px;
+}
+.work-with-test > p > a:hover {
+    text-decoration: underline;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*стилі для списку моїх тестів*/
+section.my-tests {
+    text-align: center;
+    padding: 20px;
+}
+section.my-tests > h2 {
+    margin-bottom: 20px;
+}
+section.my-tests > form {
+    margin-bottom: 20px;
+}
+section.my-tests > form > label {
+    font-weight: bold;
+}
+section.my-tests > form > input, select {
+    width: 50%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+section.my-tests > main {
+    margin-top: 20px;
+}
+section.my-tests > main > div {
+    border: 1px solid black;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*стилі для процесу проходження тесту*/
+section.test-process {
+    text-align: center;
+    padding: 20px;
+    margin: 0 auto;
+    display: block;
+    max-width: 50%;
+}
+section.test-process > h1, h2, h3 {
+    color: #333;
+}
+section.test-process > .questions {
+    text-align: left;
+}
+section.test-process > .questions > .question {
+    margin-bottom: 20px;
+}
+section.test-process > .questions > .question > .answers-container {
+    list-style-type: none;
+    padding: 0;
+}
+section.test-process > .questions > .question > .answers-container > .answer {
+    margin-bottom: 10px;
+}
+section.test-process > .questions > .question > .answers-container > .answer > .answer-input {
+    margin-right: 10px;
+}
+section.test-process > .submit-test-button {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+section.test-process > .submit-test-button:hover {
+    background-color: #555;
+}
+section.test-process > h2 {
+    margin-top: 20px;
+}
+
+
+
+
+
+
+
+
+/*стилі налаштування профілю*/
+section.profile-settings {
+    text-align: center;
+    padding: 20px;
+    width: 50%;
+    margin: 0 auto;
+}
+section.profile-settings > h1, h2, h3 {
+    color: #333;
+}
+section.profile-settings > fieldset {
+    margin-bottom: 20px;
+}
+section.profile-settings > fieldset > legend {
+    font-weight: bold;
+    color: #333;
+}
+section.profile-settings > fieldset > fieldset > div > label {
+    display: block;
+    margin-bottom: 5px;
+}
+section.profile-settings > fieldset > fieldset > div > input[type="text"],
+section.profile-settings > fieldset > fieldset > div > input[type="password"],
+section.profile-settings > fieldset > fieldset > div > select {
+    width: 70%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+section.profile-settings > fieldset > fieldset > div > button {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+section.profile-settings > fieldset > fieldset > div > button:hover {
+    background-color: #555;
+}

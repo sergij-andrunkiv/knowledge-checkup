@@ -7,39 +7,45 @@
     </head>
     <body>
         <header>
-            <h1>Проходження тесту</h1>
+            <h1><img src="../../static/img/logo.jpg" alt=""> Knowledge Checkup</h1>
             {{template "automenu" .UserAccount}}
         </header>
-        <section>
+        <section class="test-process">
+            <h1>Проходження тесту</h1>
             <h2>{{.TestEntity.Title}}</h2>
             {{if .UserAccount.Email}}
-                <div class="questions">
-                    {{- range $i, $question := .TestEntity.Questions}}
-                        <div class="question" data-question-id="{{$question.ID}}">
-                            <h3>
-                                <strong>#{{$i}}:</strong>
-                                {{$question.Label}}
-                            </h3>
-                            <ul class="answers-container">
-                                {{- range $answer := $question.AnswerOptions}}
-                                    <li class="answer">
-                                        {{if eq $question.Type "single"}}
-                                            <input type="radio" class="answer-input" data-answer-id="{{$answer.ID}}" id="answer-{{$answer.ID}}" name="question-{{$question.ID}}-answer">
-                                        {{else}}
-                                            <input type="checkbox" class="answer-input" data-answer-id="{{$answer.ID}}" id="answer-{{$answer.ID}}" name="question-{{$question.ID}}-answer">
-                                        {{end}}
-                                        <label for="answer-{{$answer.ID}}">{{$answer.Label}}</label>
-                                    </li>
-                                {{- end}}
-                            </ul>
-                        </div>
-                    {{- end}}
+            <div class="questions">
+                {{- range $i, $question := .TestEntity.Questions}}
+                <div class="question" data-question-id="{{$question.ID}}">
+                    <h3>
+                        <strong>#{{$i}}:</strong>
+                        {{$question.Label}}
+                    </h3>
+                    <ul class="answers-container">
+                        {{- range $answer := $question.AnswerOptions}}
+                        <li class="answer">
+                            {{if eq $question.Type "single"}}
+                            <input type="radio" class="answer-input" data-answer-id="{{$answer.ID}}" id="answer-{{$answer.ID}}" name="question-{{$question.ID}}-answer">
+                            {{else}}
+                            <input type="checkbox" class="answer-input" data-answer-id="{{$answer.ID}}" id="answer-{{$answer.ID}}" name="question-{{$question.ID}}-answer">
+                            {{end}}
+                            <label for="answer-{{$answer.ID}}">{{$answer.Label}}</label>
+                        </li>
+                        {{- end}}
+                    </ul>
                 </div>
-                <button class="submit-test-button">Надіслати</button>
+                {{- end}}
+            </div>
+            <button class="submit-test-button">Надіслати</button>
             {{else}}
-                <h2>Увійдіть в акаунт для проходження тесту</h2>
+            <h2>Увійдіть в акаунт для проходження тесту</h2>
             {{end}}
         </section>
         <script src="/static/js/submitTest.js"></script>
+        <footer>
+            <p><a href="about">Про нас</a></p>
+            <p><a href="help">Допомога</a></p>
+            <p>Knowledge Checkup(c) 2023</p>
+        </footer>
     </body>
 </html>

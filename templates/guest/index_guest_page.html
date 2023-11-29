@@ -7,13 +7,24 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Головна - Knowledge Checkup</title>
         {{template "imports"}}
+        <style>
+
+        </style>
     </head>
     <body>
         <header>
-            <h1>Головна сторінка (для гостя)</h1>
+            <h1><img src="../../static/img/logo.jpg" alt=""> Knowledge Checkup</h1>
             {{template "guestMenu"}}
-            <p>Тут буде лого сайту...</p>
         </header>
+        <section class="section-container">
+            <div class="logo-container">
+                <img src="../../static/img/logo.jpg" alt="">
+            </div>
+            <div class="logo-text">
+                <p>Широкий вибір тестів на різні теми!</p>
+                <p>Вбудований конструктор тестів!</p>
+            </div>
+        </section>
         <footer>
             <p><a href="about">Про нас</a></p>
             <p><a href="help">Допомога</a></p>

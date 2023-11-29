@@ -13,10 +13,10 @@ type Mail struct {
 	Body    string
 }
 
-const FROM = ""
+const FROM = "knowledge.checkup@gmail.com"
 const HOST = "smtp.gmail.com"
 const PORT = "587"
-const PASSWORD = ""
+const PASSWORD = "iuwzcmcmndibvtxd "
 
 // Надіслати повідомлення
 func SendEmail(to []string, subject string, body string) error {

@@ -1,34 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Мої тести - Knowledge Checkup</title>
-    {{template "imports"}}
-</head>
-<body>
-    <header>
-        <h1>Мої тести (тільки для вчителя)</h1>
-        {{template "teacherMenu"}}
-    </header>
-    <section>
-        <h2>Кабінет керування створеними тестами</h2>
-        <form action="">
-            <label for="createdTestFilter">Пошук:</label> <br>
-            <input type="text" id="createdTestFilter" name="createdTestFilter" placeholder="Введіть назву або ID тесту">
-        </form>
-        <h2>Попередній перегляд останніх створених тестів</h2>
-        <form action="">
-            <label for="sort_options">Сортувати за:</label>
-            <select id="sort_options" name="sort_options">
-                <option value="Title" data-type="string">Назвою</option>
-                <option value="CreatedAt" data-type="date">Датою створення</option>
-                <option value="UpdatedAt" data-type="date">Датою модифікації</option>
-            </select>
-        </form>
-        <main></main>
-        <script>
-            renderTestList("main", "/sendTestsInformationToClient", true)
-        </script>
-    </section>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Мої тести - Knowledge Checkup</title>
+        {{template "imports"}}
+    </head>
+    <body>
+        <header>
+            <h1><img src="../../static/img/logo.jpg" alt=""> Knowledge Checkup</h1>
+            {{template "teacherMenu"}}
+        </header>
+        <section class="my-tests">
+            <h2>Кабінет керування створеними тестами</h2>
+            <form action="">
+                <label for="createdTestFilter">Пошук:</label> <br>
+                <input type="text" id="createdTestFilter" name="createdTestFilter" placeholder="Введіть назву або ID тесту">
+            </form>
+            <h2>Попередній перегляд останніх створених тестів</h2>
+            <form action="">
+                <label for="sort_options">Сортувати за:</label>
+                <select id="sort_options" name="sort_options">
+                    <option value="Title" data-type="string">Назвою</option>
+                    <option value="CreatedAt" data-type="date">Датою створення</option>
+                    <option value="UpdatedAt" data-type="date">Датою модифікації</option>
+                </select>
+            </form>
+            <main></main>
+            <script>
+                renderTestList("main", "/sendTestsInformationToClient", true)
+            </script>
+        </section>
+        <footer>
+            <p><a href="about">Про нас</a></p>
+            <p><a href="help">Допомога</a></p>
+            <p>Knowledge Checkup(c) 2023</p>
+        </footer>
+    </body>
 </html>
